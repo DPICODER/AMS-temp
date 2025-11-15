@@ -1,0 +1,41 @@
+<div class="modal fade " id="dynamicAlertModal" tabindex="-1" aria-labelledby="dynamicAlertModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content d-flex">
+            <button class="btn-close ms-auto p-1" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        
+        <h5 class="modal-title text-dark fw-bold text-center" id="dynamicAlertModalLabel"></h5>
+        <div class="modal-body" id="dynamicAlertBody">
+            <div id="dynamicAlertBodyMessage"></div>
+            <div class="d-flex">
+                <button type="button" class="ms-auto btn btn-dark text-white" id="dynamicAlertModalConfirmBtn">Continue</button>
+            </div>
+        </div>
+
+    </div>
+    </div>
+</div>
+<script>
+    let alertCallback = null;
+
+    $(document).ready(function(){
+        $('#dynamicAlertModalConfirmBtn').on('click',function(){
+	setTimeout(()=>{
+            if(typeof alertCallback === 'function'){
+		//console.log("called Callback");
+                alertCallback();
+            }
+	},300);
+            $('#dynamicAlertModal').modal('hide');
+        })
+    });
+
+
+    function showAlert({title,message,onConfirm}){
+	//console.log("funciton call");
+        $('#dynamicAlertModalLabel').text(title||"confirm");
+        $('#dynamicAlertBodyMessage').text(message || "Are you sure?");
+        alertCallback = onConfirm;
+        $('#dynamicAlertModal').modal('show');
+    }
+
+</script>

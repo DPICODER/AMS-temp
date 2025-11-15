@@ -1,0 +1,472 @@
+<%- include('../partials/header') %>
+<style>
+
+        .capture-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .toggle-label {
+            margin-right: 10px;
+        }
+
+        .live-video-label {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .camera {
+            width: 100%;
+            height: 100%;
+            border: 1px solid green;
+            padding: 2px;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #FFF;
+            text-align: center;
+            font-size: 1rem;
+            display: none;
+            /* Initially hidden */
+        }
+
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .img-container {
+            background-color: rgb(191, 224, 191);
+            text-align: center;
+            width: 70%;
+            height: 40%;
+            max-height: 80%;
+            min-height: 70%;
+        }
+
+        .preview-old,
+        video {
+            width: 100px;
+            height: 100px;
+            max-width: 150px;
+            max-height: 150px;
+            border: 1px dotted black;
+            object-fit: cover;
+        }
+
+        .camera,
+        .preview,
+
+        canvas {
+            width: 200px;
+            height: 200px;
+            max-width: 200px;
+            max-height: 200px;
+            border: 1px dotted green;
+            padding: 2px;
+            object-fit: cover;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 27px;
+            margin: 2px 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-switch {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .2s;
+        }
+
+        .slider-switch:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .2s;
+        }
+
+        input:checked+.slider-switch {
+            background-color: #4CAF50;
+        }
+
+        input:focus+.slider-switch {
+            box-shadow: 0 0 1px #4CAF50;
+        }
+
+        input:checked+.slider-switch:before {
+            transform: translateX(20px);
+        }
+
+        .slider-switch.round {
+            border-radius: 20px;
+        }
+
+        .slider-switch.round:before {
+            border-radius: 50%;
+        }
+
+        canvas {
+            border: 2px solid #000;
+            cursor: crosshair;
+        }
+
+        input:read-only {
+            background-color: #e9ecef;
+            /* Grey background */
+            cursor: not-allowed;
+            /* Change cursor to 'not-allowed' */
+        }
+    </style>
+ 
+    <div class="container-fluid mt-4">
+        <div class="card shadow">
+            <div class="card-body">
+                <form action="<%= action %>" method="POST" enctype="multipart/form-data"></form>
+                <div class="row">
+                <div class="col-md-3">
+                            <div class="row">
+                                <div class="form-group">
+                                <label for="id" class="form-label read-only-input">User ID</label>
+                                <input class="form-control shadow" type="number" id="u_id" name="u_id" value="<%= usr.u_id || '' %>"
+                                    disabled>
+                </div>
+                                <div class="form-group">
+                                    <label for="u_name" class="form-label">Name</label>
+                                <input class="form-control shadow" type="text" id="u_name" name="u_name" value="<%= usr.u_name || '' %>"
+                                    disabled>
+                                </div>
+                
+                                <div class="form-group">
+                                    <label for="u_department" class="form-label">Department</label>
+                                <input class="form-control shadow" type="text" id="u_department" name="u_department" maxlength="20"
+                                    value="<%= usr.u_department || '' %>" disabled>
+                                </div>
+                
+                                <div class="form-group">
+                                    <label for="u_project" class="form-label">Project</label>
+                                <input class="form-control shadow" type="text" id="u_project" name="u_project"
+                                    value="<%= usr.u_project || '' %>">
+                                </div>
+                                <div class="form-group">
+                                <label for="u_dor" class="form-label">DoR</label>
+                                <input class="form-control shadow" type="date" id="u_dor" name="u_dor" value="<%= usr.u_dor %>"
+                                    disabled>
+                                </div>
+                
+                            </div> 
+                        </div>
+                            <div class="col-md-3 ">
+                                <div class="form-group">
+                                <label for="u_grade" class="form-label">Grade</label>
+                <input class="form-control shadow" type="text" id="u_grade" name="u_grade" maxlength="3"
+                    value="<%= usr.u_grade || '' %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="u_unit" class="form-label">Unit</label>
+                <input class="form-control shadow" type="text" id="u_unit" name="u_unit" value="<%= usr.u_unit || '' %>"
+                disabled>
+            </div>
+
+                <div class="form-group">
+                <label for="u_theme" class="form-label">Theme</label>
+                <input class="form-control shadow" type="text" id="u_theme" name="u_theme"
+                    value="<%= usr.u_theme || '' %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="u_extension_no" class="form-label">Extension Number</label>
+                <input class="form-control shadow" type="text" id="u_extension_no" name="u_extension_no"
+                    value="<%= usr.u_extension_no || '' %>" required>
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="u_status" class="form-label ">Status</label>
+                <select class="w3-select w3-border" id="u_status" name="u_status" disabled>
+                    <option value="" disabled selected>Select Status</option>
+                    <option value="working" <%=usr.u_status==='working' ? 'selected' : '' %>>Working
+                    </option>
+                    <option value="transferred" <%=usr.u_status==='transferred' ? 'selected' : '' %>
+                        >Transferred</option>
+                    <option value="retired" <%=usr.u_status==='retired' ? 'selected' : '' %>>Retired
+                    </option>
+                </select>
+            </div>
+        </div>
+                                <div class="col-md-3 ">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                            <label for="u_photo">Old Photo</label>
+                                            <% if (usr.u_photo) { %>
+                                                <img src="data:image/jpeg;base64,<%= usr.u_photo %>" alt="User Photo"
+                                                    class="preview-old w3-center">
+                                                <% } else { %>
+                                                    No Photo
+                                                    <% } %>
+                                
+                            
+                                        <div class="capture-container">
+                                            <div class="toggle-container">
+                                </div>
+
+                                                <div class="form-group">
+                                                <label class="toggle-label" for="cameraToggle">Video ON/OFF</label>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="cameraToggle" onchange="toggleCamera(this)">
+                                                    <span class="slider-switch round"></span>
+                                                </label>
+                                            </div>
+                                            <div class="video-wrapper">
+                                                <video id="video" class="camera" autoplay muted playsinline></video>
+                                                <div id="video-overlay" class="overlay">Webcam off</div>
+                                </div>
+                            </div>
+                                            <div class="form-group">
+                                            <label for="photoToUpload">Below Photo auto Uploads Upon Submit:</label>
+                                            <img id="photoToUpload" class="preview w3-center" src="" alt="Cropped photo">
+                                            <p id="photoSize" class="w3-text-grey"></p> <!-- Photo size label -->
+                                    </div></div>
+                                </div>
+                            </div></div>
+            
+                                <div class="col-md-3 ">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                            <label for="u_photo">Browse and Upload</label>
+                                            <input type="file" id="u_photo" name="u_photo" accept="image/*" onchange="previewFile()">
+                                            <input type="hidden" id="u_photo_data" name="u_photo_data">
+                                            <img id="crop_img" style="display:none;"> <!-- Hidden image for Cropper -->
+                                        </div>
+                            
+                            
+                                        <div class="preview-container">
+                            
+                                            <button type="button" class="w3-button w3-teal w3-margin-top w3-round" onclick="capturePhoto()">Capture
+                                                Photo</button>
+                                </div>
+
+                                            <div class="form-group">
+                                                <label for="canvas">Use Mouse to adjust </label>
+                                            <div class="img-container">
+                                                <canvas id="canvas" class="preview"></canvas>
+                                            </div>
+                                        </div>
+                            
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--row-->
+                        </div><!--card body-->
+                    </div>
+                                <!--label for="u_grade" class="form-label">Grade</label>
+                                <input class="form-control shadow  " type="text" id="u_grade" name="u_grade" maxlength="3" min="1" max="3"
+                                    placeholder="I" value="<%= usr.u_grade || '' %>" required-->
+                
+                                <!-- Unit Dropdown -->
+                                <!-- Grade Input with Dropdown Options --> 
+                    
+                        
+    
+    </div>
+
+
+    <script src="/core/js/cropper.min.js"></script>
+    <link href="/core/css/cropper.min.css" rel="stylesheet">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const photoToUpload = document.getElementById('photoToUpload');
+            const photoSize = document.getElementById('photoSize');
+            const uPhotoData = document.getElementById('u_photo_data');
+            const overlay = document.getElementById('video-overlay');
+            let stream = null;
+            let cropper;
+
+            function startCamera() {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(mediaStream => {
+                        stream = mediaStream;
+                        video.srcObject = stream;
+                        video.play();
+                        overlay.style.display = 'none'; // Hide overlay
+                    })
+                    .catch(err => {
+                        // alert("Error accessing camera: " + err);
+                        overlay.textContent = 'Webcam Not Found';
+                        overlay.style.display = 'flex'; // show overlay
+                        //console.error("Error accessing the camera: " + err);
+                    });
+            }
+
+            function toggleCamera(element) {
+                if (element.checked) {
+                    startCamera();
+                } else {
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                        video.srcObject = null;
+                    }
+                    overlay.textContent = 'Webcam off';
+                    overlay.style.display = 'flex'; // Show overlay
+                }
+            }
+
+            function capturePhoto() {
+                const context = canvas.getContext('2d');
+                const videoWidth = video.videoWidth;
+                const videoHeight = video.videoHeight;
+                canvas.width = videoWidth;
+                canvas.height = videoHeight;
+
+                context.drawImage(video, 0, 0, videoWidth, videoHeight);
+                canvas.style.display = 'block';
+
+                let data = canvas.toDataURL('image/jpeg');
+                let quality = 0.7;
+                let sizeInBytes = (data.length * 3) / 4;
+
+                while (sizeInBytes > 25 * 1024 && quality > 0.1) {
+                    quality -= 0.1;
+                    data = canvas.toDataURL('image/jpeg', quality);
+                    sizeInBytes = (data.length * 3) / 4;
+                }
+
+                if (sizeInBytes > 25 * 1024) {
+                    alert("Unable to compress image below 25 KB.");
+                    return;
+                }
+
+                photoToUpload.src = data;
+                photoToUpload.style.display = 'block';
+                uPhotoData.value = data;
+                photoSize.textContent = `Photo size: ${(sizeInBytes / 1024).toFixed(2)} KB`;
+
+                initializeCropper(canvas);
+            }
+
+            function previewFile() {
+                const file = document.getElementById('u_photo').files[0];
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const img = new Image();
+                    img.src = reader.result;
+                    img.onload = function () {
+                        const context = canvas.getContext('2d');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        context.drawImage(img, 0, 0);
+                        canvas.style.display = 'block';
+
+                        initializeCropper(canvas);
+                    }
+                }
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            function initializeCropper(canvas) {
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(canvas, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 0.8,
+                    cropBoxResizable: true,
+                    cropBoxMovable: true,
+                    movable: true,
+                    scalable: true,
+                    rotatable: true,
+                    zoomable: true,
+                    dragMode: 'crop',
+                    ready() {
+                        canvas.addEventListener('cropend', () => {
+                            const croppedCanvas = cropper.getCroppedCanvas();
+                            let croppedData = croppedCanvas.toDataURL('image/jpeg');
+                            let croppedQuality = 0.7;
+                            let croppedSizeInBytes = (croppedData.length * 3) / 4;
+
+                            while (croppedSizeInBytes > 25 * 1024 && croppedQuality > 0.1) {
+                                croppedQuality -= 0.1;
+                                croppedData = croppedCanvas.toDataURL('image/jpeg', croppedQuality);
+                                croppedSizeInBytes = (croppedData.length * 3) / 4;
+                            }
+
+                            if (croppedSizeInBytes > 25 * 1024) {
+                                alert("Unable to compress cropped image below 25 KB.");
+                                return;
+                            }
+
+                            photoToUpload.src = croppedData;
+                            photoToUpload.style.display = 'block';
+                            uPhotoData.value = croppedData;
+                            photoSize.textContent = `Cropped Photo size: ${(croppedSizeInBytes / 1024).toFixed(2)} KB`;
+                        });
+                    }
+                });
+            }
+
+            const cameraToggle = document.getElementById('cameraToggle');
+            if (cameraToggle) {
+                cameraToggle.addEventListener('change', () => {
+                    toggleCamera(cameraToggle);
+                });
+                cameraToggle.checked = true;
+                startCamera();
+            }
+
+            document.querySelector('button[onclick="capturePhoto()"]').addEventListener('click', capturePhoto);
+            document.getElementById('u_photo').addEventListener('change', previewFile);
+        });
+
+    </script>
+
+    <%- include('../partials/footer') %>

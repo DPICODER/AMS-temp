@@ -1,0 +1,58 @@
+<%- include('../partials/header') %>
+  <div class="container text-center">
+    <h3 class="mt-5">User Management</h3>
+
+    <% if (errorMessage) { %>
+      <div class="alert alert-danger">
+        <%= errorMessage %>
+      </div>
+      <% } %>
+        <% if (successMessage) { %>
+          <div class="alert alert-success">
+            <%= successMessage %>
+          </div>
+          <% } %>
+
+
+            <!--h4 class="mt-4">All Users</h4-->
+
+            <table class="table table-bordered mt-3">
+              <thead>
+                <tr>
+                  <th>SAP ID</th>
+                  <th>Leg ID</th>
+                  <th>Name</th>
+                  <th>Division</th>
+                  <th>Department</th>
+                  <th>Status</th>                  
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(user=> { %>
+                  <tr>
+                    <td>
+                      <%= user.sap_id %>
+                    </td>
+                    <td>
+                      <%= user.leg_id %>
+                    </td>
+                    <td>
+                      <%= user.name %>
+                    </td>
+                    <td>
+                      <%= user.division %>
+                    </td>
+                    <td>
+                      <%= user.department %>
+                    </td>
+                    <td>
+                      <%= user.status %>
+                    </td>
+                  </tr>
+                  <% }) %>
+              </tbody>
+            </table>
+
+  </div>
+
+  <%- include('../partials/footer') %>

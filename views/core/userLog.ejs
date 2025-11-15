@@ -1,0 +1,104 @@
+<%- include('../partials/header') %>
+
+  <table class="w3-table w3-striped w3-bordered w3-hoverable" id="logTable">
+    <thead>
+      <tr class="w3-light-grey">
+        <th>ID</th>
+        <th>User ID</th>
+        <th>Client IP</th>
+        <th>Attempt</th>
+        <th>Message</th>
+        <th>Login</th>
+        <th>Logout</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% logs.forEach(log=> { %>
+        <tr>
+          <td>
+            <%= log.ll_pk %>
+          </td>
+          <td>
+            <%= log.ll_id %>
+          </td>
+          <td>
+            <%= log.ll_client %>
+          </td>
+          <td>
+            <%= log.ll_attempt ? 'Success' : 'Fail' %>
+          </td>
+          <td>
+            <%= log.ll_msg %>
+          </td>
+          <td>
+            <%= log.ll_login_ts %>
+          </td>
+          <td>
+            <%= log.ll_logout_ts %>
+          </td>
+        </tr>
+        <% }) %>
+    </tbody>
+  </table>
+
+
+
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: black;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .modal-content {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    #caption {
+      text-align: center;
+      color: #ccc;
+      padding: 10px 0;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      color: #fff;
+      font-size: 30px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+
+  <script src="/core/js/dataTables.min.js"></script>
+  <link rel="stylesheet" href="/core/css/dataTables.dataTables.min.css">
+
+
+  <script>
+    $(document).ready(function () {
+      const menuTable = $('#logTable').DataTable({
+        searching: true, // Disable search functionality
+        pageLength: 50
+      });
+    });
+
+  </script>
+
+
+  <%- include('../partials/footer') %>

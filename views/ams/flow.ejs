@@ -1,0 +1,214 @@
+<%- include('../partials/header') %>
+<div class="container">
+<h3 class="text-center"></h3>
+
+<style>
+  .dbzoom:hover{
+    transform: scale(50%);
+    position: fixed;
+    top: 0%;left: 50%;transform: translateX(-50%);z-index: 998;width: 60%; display: flex; justify-content: center; align-items: center;
+  }
+</style>
+
+<div class=" accordion text-left fst-italic fw-bolder"  id="accordionVisPass">
+ 
+  <div class="accordion-item" style="height: auto;">
+    <h4 class="accordion-header">
+      <button
+        class="accordion-button"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseTwo"
+        style="background-color: #bfc9ca;"
+        aria-controls="collapseTwo"
+        
+      >
+        <i class="fas fa-thumbs-up icon"></i> &nbsp;
+        <strong>Add Acquisition</strong> &nbsp; Asset Management
+      </button>
+    </h4>
+    <div
+      id="collapseTwo"
+      class="accordion-collapse collapse "
+      data-bs-parent="#accordionVisPass"
+      >
+      <div class="accordion-body col-md-12" style="background-color: #eaeded;"  >
+          <img class="images col-md-12" src="/ams/images/Flow/Add Acquisition.png" alt="No-Image found">
+        <ul class ="list-unstyled col-md-5">
+          <li>1.Add Acquisition Page</li>
+          <li>2.User can enter PO deatils and add muliple line Items</li>
+          <li>3.Per line item user can enter specs,quantity and unit price</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item" >
+    <h4 class="accordion-header">
+      <button
+        class="accordion-button"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseThree"
+        style="background-color: #bfc9ca;"
+        aria-controls="collapseThree"
+        
+      >
+        <i class="fas fa-id-card icon"></i> 
+        <strong> Manage Acquisition View &nbsp;</strong> Asset Management
+      </button>
+    </h4>
+    <div
+      id="collapseThree"
+      class="accordion-collapse collapse "
+      data-bs-parent="#accordionVisPass"
+    >
+      <div class="accordion-body col-md-12" style="background-color: #eaeded;" >
+        
+        <ul class="list-unstyled col-md-12">
+          <li>1. Here All added Acquisiition and its line items can be viewed here</li>
+        </ul>
+        <img class="images col-md-12" src="/ams/images/Flow/Manage Acquisiition.png" alt="No-Image found">
+        <ul>
+          <li>2.Line items can be viewed in a subtable below the Acquisiition line. </li>
+          <li>3.From here tags can be either generated / viewed.</li>
+        </ul>
+        <img class="images col-md-12" src="/ams/images/Flow/Manage Acquisition Line items.png" alt="No-Image found">
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item" >
+    <h4 class="accordion-header">
+      <button
+        class="accordion-button"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseFour"
+        style="background-color: #bfc9ca;"
+        aria-controls="collapseFour"
+        
+      >
+        <i class="fas fa-sign-in-alt icon"></i>
+        <strong>Generated tags View &nbsp;</strong> Asset Management
+        <i class="fas fa-barcode icon ml-2"></i>
+      </button>
+    </h4>
+    <div
+      id="collapseFour"
+      class="accordion-collapse collapse "
+      data-bs-parent="#accordionVisPass"
+      
+    >
+      <div class="accordion-body" >
+        <ul>
+          <li>All Generated Tags for a Acquisiition are listed here and can be alloted to a user.</li>
+        </ul>
+        <img class="images col-md-12" src="/ams/images/Flow/V T.png" alt="No-Image found">
+
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item" >
+    <h4 class="accordion-header">
+      <button
+        class="accordion-button"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseFive"
+        style="background-color: #bfc9ca;"
+        aria-controls="collapseFive"
+        
+      >
+        <i class="fas fa-sign-in-alt icon"></i>
+        <strong>Allot Asset View &nbsp;</strong> Asset Management
+        <i class="fas fa-barcode icon ml-2"></i>
+      </button>
+    </h4>
+    <div
+      id="collapseFive"
+      class="accordion-collapse collapse "
+      data-bs-parent="#accordionVisPass"
+      
+    >
+      <div class="accordion-body" >
+        <ul>
+          <li>Each asset can be allocated to a individual User by entering their complete deatils carefully.</li>
+        </ul>
+        <img class="images col-md-12" src="/ams/images/Flow/AL A.png" alt="No-Image found">
+
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item" >
+    <h4 class="accordion-header">
+      <button
+        class="accordion-button"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseSix"
+        style="background-color: #bfc9ca;"
+        aria-controls="collapseSix"
+        
+      >
+        <i class="fas fa-sign-in-alt icon"></i>
+        <strong>Asset Search View &nbsp;</strong> Asset Management
+        <i class="fas fa-barcode icon ml-2"></i>
+      </button>
+    </h4>
+    <div
+      id="collapseSix"
+      class="accordion-collapse collapse "
+      data-bs-parent="#accordionVisPass"
+      
+    >
+      <div class="accordion-body" >
+        <ul>
+          <li>Assets can be searched here using Asset TAG , User SAPID .</li>
+        </ul>
+        <img class="images col-md-12" src="/ams/images/Flow/AS SR.png" alt="No-Image found">
+
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item" >
+    <h4 class="accordion-header">
+      <button
+        class="accordion-button"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseSeven"
+        style="background-color: #bfc9ca;"
+        aria-controls="collapseSeven"
+        
+      >
+        <i class="fas fa-sign-in-alt icon"></i>
+        <strong>Raise Tickets View&nbsp;</strong> Asset Management
+        <i class="fas fa-barcode icon ml-2"></i>
+      </button>
+    </h4>
+    <div
+      id="collapseSeven"
+      class="accordion-collapse collapse "
+      data-bs-parent="#accordionVisPass"
+      
+    >
+      <div class="accordion-body" >
+        <ul>
+          <li>User can report their issue by raising ticket for specific asset on their dashboard.</li>
+        </ul>
+        <img class="images col-md-12" src="/ams/images/Flow/Complaint.png" width="300px" height="600px" alt="No-Image found">
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<script>
+  var carousel = document.querySelector('#carouselIndicators');
+
+  var carousel2 = new bootstrap.Carousel(carousel,{
+    interval : 2000,
+    ride:'carousel'
+  })
+</script>
+<%- include('../partials/footer') %>

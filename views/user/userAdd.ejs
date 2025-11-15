@@ -1,0 +1,72 @@
+<%- include('../partials/header') %>
+
+  <h3 class="mt-5">Add New User</h3>
+
+  <% if (errorMessage) { %>
+    <div class="alert alert-danger">
+      <%= errorMessage %>
+    </div>
+    <% } %>
+      <% if (successMessage) { %>
+        <div class="alert alert-success">
+          <%= successMessage %>
+        </div>
+        <% } %>
+          <form action="/user/userAdd" method="post">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="sap_id">SAP ID</label>
+                  <input type="number" class="form-control" id="sap_id" name="sap_id" required>
+                </div>
+                <div class="form-group">
+                  <label for="leg_id">Leg ID</label>
+                  <input type="number" class="form-control" id="leg_id" name="leg_id">
+                </div>
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" id="name" name="name">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="division">Division</label>
+                  <input type="text" class="form-control" id="division" name="division">
+                </div>
+                <div class="form-group">
+                  <label for="department">Department</label>
+                  <input type="text" class="form-control" id="department" name="department">
+                </div>
+                <div class="form-group">
+                  <label for="dob">Date of Birth</label>
+                  <input type="date" class="form-control" id="dob" name="dob">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="status">Status</label>
+                  <select class="form-control" id="status" name="status">
+                    <option value="Working">Working</option>
+                    <option value="Transferred">Transferred</option>
+                    <option value="Retired">Retired</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                  <label for="theme">Theme</label>
+                  <input type="text" class="form-control" id="theme" name="theme">
+                </div>
+                <div class="form-group">
+                  <label for="unit_location">Unit Location</label>
+                  <input type="text" class="form-control" id="unit_location" name="unit_location">
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add User</button>
+          </form>
+          <!-- a href="/user/userList" class="btn btn-secondary mt-3">Back to User Management</a-->
+
+          <%- include('../partials/footer') %>

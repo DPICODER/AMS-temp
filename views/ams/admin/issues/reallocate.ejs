@@ -1,0 +1,87 @@
+<%- include('../../../partials/header', { title: "Reallocate Asset" }) %>
+
+<div class="container mt-4">
+
+  <h3 class="mb-3">
+    <i class="bi bi-arrow-left-right"></i> Reallocate Asset
+  </h3>
+
+  <div class="card p-3 shadow-sm">
+
+    <p><strong>Tag:</strong> <%= issue.tag %></p>
+    <p><strong>Last Status:</strong> <%= issue.status %></p>
+    <p><strong>Description:</strong> <%= issue.description %></p>
+
+    <hr>
+
+    <h5 class="mt-3 mb-2">New Employee Details</h5>
+
+    <form id="reallocateForm">
+
+      <input type="hidden" id="issueId" value="<%= issue.issue_id %>">
+
+      <label>Name</label>
+      <input type="text" id="empName" class="form-control mb-2">
+
+      <label>SAP ID</label>
+      <input type="text" id="empSapid" class="form-control mb-2">
+
+      <label>Designation</label>
+      <input type="text" id="empDesignation" class="form-control mb-2">
+
+      <label>Division</label>
+      <input type="text" id="empDivision" class="form-control mb-2">
+
+      <label>Department</label>
+      <input type="text" id="empDepartment" class="form-control mb-2">
+
+      <label>Phone</label>
+      <input type="text" id="empPhone" class="form-control mb-2">
+
+      <label>Building</label>
+      <input type="text" id="empBuilding" class="form-control mb-2">
+
+      <button class="btn btn-primary mt-3" type="button" onclick="submitReallocate()">
+        Reallocate Asset
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+async function submitReallocate() {
+
+  const payload = {
+    issue_id: document.getElementById("issueId").value,
+    action: "reallocate",
+    emp: {
+      name: document.getElementById("empName").value,
+      sapid: document.getElementById("empSapid").value,
+      designation: document.getElementById("empDesignation").value,
+      division: document.getElementById("empDivision").value,
+      department: document.getElementById("empDepartment").value,
+      phone: document.getElementById("empPhone").value,
+      building: document.getElementById("empBuilding").value
+    }
+  };
+
+  const res = await fetch('/ams/admin/issues/finalize', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  const j = await res.json();
+
+  if (j.success) {
+    alert("Asset reallocated successfully!");
+    window.location.href = '/ams/admin/issues';
+  } else {
+    alert("Error: " + j.message);
+  }
+}
+</script>
+
+<%- include('../../../partials/footer') %>

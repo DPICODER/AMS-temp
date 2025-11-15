@@ -1,0 +1,1179 @@
+<%- include('../partials/header',{title:""}) %>
+
+<style>
+  :root {
+    /* Enhanced color palette with better contrast */
+    --primary-color: #1a365d;
+    --primary-light: #2d4a7b;
+    --secondary-color: #4a5568;
+    --accent-color: #3182ce;
+    --success-color: #38a169;
+    --warning-color: #d69e2e;
+    --danger-color: #e53e3e;
+    --info-color: #4299e1;
+    --light-bg: #f7fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    
+    /* Enhanced shadows for depth */
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+    --active-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    /* Modern gradients */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-success: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    --gradient-warning: linear-gradient(135deg, #ed8936 0%, #d69e2e 100%);
+    --gradient-danger: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    --gradient-info: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    
+    /* Animation variables */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+  }
+
+  /* Dark mode variables */
+  [data-theme="dark"] {
+    --primary-color: #e2e8f0;
+    --primary-light: #cbd5e0;
+    --secondary-color: #a0aec0;
+    --accent-color: #63b3ed;
+    --success-color: #68d391;
+    --warning-color: #f6ad55;
+    --danger-color: #fc8181;
+    --info-color: #63b3ed;
+    --light-bg: #1a202c;
+    --card-bg: #2d3748;
+    --border-color: #4a5568;
+    --text-primary: #f7fafc;
+    --text-secondary: #e2e8f0;
+    --text-muted: #a0aec0;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+    --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Core Layout */
+  html, body {
+    /* max-height: 99.8%;
+    width: 100%; */
+    /* overflow: hidden; */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-primary);
+    background-color: var(--light-bg);
+    font-size: 14px;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+  }
+
+  .dashboard-container {
+    display: flex;
+    flex-direction: column;
+    /* height: 100vh; */
+    padding: 1rem;
+    gap: 1rem;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* margin-bottom: 0.5rem; */
+  }
+
+  .dashboard-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .dashboard-title i {
+    color: var(--accent-color);
+    font-size: 1.75rem;
+  }
+
+  .dashboard-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .theme-toggle {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    color: var(--text-secondary);
+  }
+
+  .theme-toggle:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: rotate(180deg);
+  }
+
+  .refresh-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    color: var(--text-secondary);
+  }
+
+  .refresh-btn:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: rotate(90deg);
+  }
+
+  .refresh-btn.spinning {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .row-fixed {
+    flex-shrink: 0;
+  }
+  
+  .row-charts-primary,
+  .row-charts-secondary {
+    flex: 1;
+    min-height: 0; 
+  }
+
+  .row-charts-primary > .col-lg-4,
+  .row-charts-secondary > .col-12 {
+    height: 100%;
+  }
+  
+  /* Enhanced Stat Card Styles */
+  .stats-card {
+    background: var(--card-bg);
+    border-radius: 0.75rem;
+    box-shadow: var(--card-shadow);
+    padding: 1.25rem;
+    transition: all var(--transition-normal);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+  }
+
+  .stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  .stats-card:hover::before {
+    transform: translateX(100%);
+  }
+
+  .stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--active-shadow);
+  }
+
+  .stats-card.clickable {
+    cursor: pointer;
+  }
+
+  .stats-card.clickable:hover {
+    border-left-color: var(--accent-color);
+  }
+
+  /* Color-coded cards */
+  .stats-card.all { border-left-color: var(--info-color); }
+  .stats-card.free { border-left-color: var(--success-color); }
+  .stats-card.repair { border-left-color: var(--warning-color); }
+  .stats-card.condemn { border-left-color: var(--danger-color); }
+
+  .stats-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* margin-bottom: 1rem; */
+  }
+
+  .stats-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-normal);
+  }
+
+  .stats-card:hover .stats-icon {
+    transform: scale(1.1);
+  }
+
+  /* Icon gradient backgrounds */
+  .stats-icon.total { background: var(--gradient-info); }
+  .stats-icon.utilization { background: var(--gradient-primary); }
+  .stats-icon.value { background: var(--gradient-success); }
+  .stats-icon.free { background: var(--gradient-success); }
+  .stats-icon.repair { background: var(--gradient-warning); }
+  .stats-icon.condemn { background: var(--gradient-danger); }
+
+  .stats-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+    transition: all var(--transition-normal);
+  }
+
+  .stats-card:hover .stats-badge {
+    background: var(--accent-color);
+    color: white;
+  }
+
+  .stats-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .stats-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+    line-height: 1.2;
+    transition: all var(--transition-normal);
+  }
+
+  .stats-card:hover .stats-value {
+    transform: scale(1.05);
+  }
+
+  .stats-footer {
+    margin-top: auto;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: all var(--transition-normal);
+  }
+
+  .stats-card:hover .stats-footer {
+    color: var(--accent-color);
+  }
+
+  /* Enhanced Chart Card Styles */
+  .chart-card {
+    background: var(--card-bg);
+    border-radius: 0.75rem;
+    box-shadow: var(--card-shadow);
+    padding: 1.25rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chart-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-normal);
+  }
+
+  .chart-card:hover::after {
+    transform: scaleX(1);
+  }
+
+  .chart-card:hover {
+    box-shadow: var(--hover-shadow);
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* margin-bottom: 1rem; */
+    flex-shrink: 0;
+  }
+
+  .chart-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .chart-title i {
+    color: var(--accent-color);
+  }
+
+  .chart-actions {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .chart-action-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: all var(--transition-fast);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chart-action-btn:hover {
+    background: var(--accent-color);
+    color: white;
+  }
+
+  .chart-container {
+    flex: 1;
+    position: relative;
+    min-height: 0;
+  }
+
+  .chart-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+    border-radius: 0.5rem;
+  }
+
+  [data-theme="dark"] .chart-loading {
+    background: rgba(45, 55, 72, 0.8);
+  }
+
+  .chart-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--accent-color);
+    animation: spin 1s ease-in-out infinite;
+  }
+
+  /* Compact margins */
+  .mb-compact { margin-bottom: 1rem; }
+  .mb-compact-col > [class*="col-"] { margin-bottom: 1rem; }
+
+  /* Grid layout improvements */
+  .row {
+    margin: 0;
+  }
+  
+  .col-lg-2, .col-lg-4, .col-md-4, .col-md-6, .col-sm-6, .col-12 {
+    padding: 0.5rem;
+  }
+
+  /* Tooltip styles */
+  .tooltip-custom {
+    position: absolute;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    box-shadow: var(--card-shadow);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+  }
+
+  .tooltip-custom.show {
+    opacity: 1;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      padding: 0.5rem;
+      gap: 0.5rem;
+    }
+    
+    .stats-card {
+      padding: 1rem;
+    }
+    
+    .chart-card {
+      padding: 1rem;
+    }
+    
+    .stats-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 1.25rem;
+    }
+    
+    .stats-value {
+      font-size: 1.5rem;
+    }
+    
+    .dashboard-title {
+      font-size: 1.25rem;
+    }
+    
+    .dashboard-header {
+      flex-direction: column;
+      align-items: flex-start;
+      /* gap: 0.5rem; */
+    }
+  }
+
+  /* Data refresh animation */
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+
+  .refreshing {
+    animation: pulse 1s ease-in-out;
+  }
+</style>
+<style>
+  /* Notification styles */
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--card-bg);
+    border-radius: 0.5rem;
+    box-shadow: var(--hover-shadow);
+    padding: 0;
+    min-width: 300px;
+    max-width: 400px;
+    z-index: 9999;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    border-left: 4px solid var(--info-color);
+    overflow: hidden;
+  }
+
+  .notification-success {
+    border-left-color: var(--success-color);
+  }
+
+  .notification-warning {
+    border-left-color: var(--warning-color);
+  }
+
+  .notification-danger {
+    border-left-color: var(--danger-color);
+  }
+
+  .notification.show {
+    transform: translateX(0);
+  }
+
+  .notification-content {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .notification-content i {
+    font-size: 1.25rem;
+    color: var(--info-color);
+  }
+
+  .notification-success .notification-content i {
+    color: var(--success-color);
+  }
+
+  .notification-warning .notification-content i {
+    color: var(--warning-color);
+  }
+
+  .notification-danger .notification-content i {
+    color: var(--danger-color);
+  }
+
+  .notification-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+    font-size: 1rem;
+    transition: color var(--transition-fast);
+  }
+
+  .notification-close:hover {
+    color: var(--text-primary);
+  }
+</style>
+<div class="dashboard-container">
+  <div class="row row-fixed mb-compact">
+    <div class="col">
+      <div class="dashboard-header">
+
+        <div class="dashboard-actions">
+          <button class="refresh-btn" id="refreshBtn" title="Refresh data">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+          <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+            <i class="bi bi-moon-fill"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row row-fixed mb-compact-col">
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-compact">
+      <div class="stats-card clickable all" onclick="navigateToAllAssets()" data-tooltip="View all assets">
+        <div class="stats-card-header">
+          <div class="stats-icon total">
+            <i class="bi bi-stack"></i>
+          </div>
+          <span class="stats-badge">All</span>
+        </div>
+        <div class="stats-label">Total Assets</div>
+        <h4 class="stats-value" id="totalAssets">0</h4>
+        <div class="stats-footer">
+          <i class="bi bi-arrow-right"></i> View all assets
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-compact">
+      <div class="stats-card" data-tooltip="Current utilization rate">
+        <div class="stats-card-header">
+          <div class="stats-icon utilization">
+            <i class="bi bi-percent"></i>
+          </div>
+          <span class="stats-badge">Rate</span>
+        </div>
+        <div class="stats-label">Utilization</div>
+        <h4 class="stats-value" id="utilization">0%</h4>
+        <div class="stats-footer">
+          <i class="bi bi-info-circle"></i> Current utilization rate
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-compact">
+      <div class="stats-card" data-tooltip="Total value of all assets">
+        <div class="stats-card-header">
+          <div class="stats-icon value">
+            <i class="bi bi-currency-rupee"></i>
+          </div>
+          <span class="stats-badge">Value</span>
+        </div>
+        <div class="stats-label">Total Value</div>
+        <h4 class="stats-value" id="totalValue">0</h4>
+        <div class="stats-footer">
+          <i class="bi bi-graph-up"></i> Total asset value
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-compact">
+      <div class="stats-card clickable free" onclick="navigateToFreeAssets()" data-tooltip="View available assets">
+        <div class="stats-card-header">
+          <div class="stats-icon free">
+            <i class="bi bi-box-seam"></i>
+          </div>
+          <span class="stats-badge">Available</span>
+        </div>
+        <div class="stats-label">Free Assets</div>
+        <h4 class="stats-value" id="freeAssets">0</h4>
+        <div class="stats-footer">
+          <i class="bi bi-arrow-right"></i> View available assets
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-compact">
+      <div class="stats-card clickable repair" onclick="navigateToRepairAssets()" data-tooltip="View assets under maintenance">
+        <div class="stats-card-header">
+          <div class="stats-icon repair">
+            <i class="bi bi-wrench"></i>
+          </div>
+          <span class="stats-badge">Maintenance</span>
+        </div>
+        <div class="stats-label">Repair Assets</div>
+        <h4 class="stats-value" id="repairAssets">0</h4>
+        <div class="stats-footer">
+          <i class="bi bi-arrow-right"></i> View repair assets
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-compact">
+      <div class="stats-card clickable condemn" onclick="navigateToCondemnAssets()" data-tooltip="View disposed assets">
+        <div class="stats-card-header">
+          <div class="stats-icon condemn">
+            <i class="bi bi-trash3"></i>
+          </div>
+          <span class="stats-badge">Disposed</span>
+        </div>
+        <div class="stats-label">Condemned</div>
+        <h4 class="stats-value" id="condemnedAssets">0</h4>
+        <div class="stats-footer">
+          <i class="bi bi-arrow-right"></i> View condemned assets
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-charts-primary mb-compact">
+    <div class="col-lg-4 col-md-6 mb-compact">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            <i class="bi bi-pie-chart"></i> Asset Distribution
+          </div>
+          <div class="chart-actions">
+            <button class="chart-action-btn" title="View details" onclick="showChartDetails('pieChart')">
+              <i class="bi bi-three-dots"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-loading" id="pieChartLoading">
+            <div class="chart-loading-spinner"></div>
+          </div>
+          <canvas id="pieChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-compact">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            <i class="bi bi-ticket-perforated"></i> Ticket Status
+          </div>
+          <div class="chart-actions">
+            <button class="chart-action-btn" title="View details" onclick="showChartDetails('ticketChart')">
+              <i class="bi bi-three-dots"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-loading" id="ticketChartLoading">
+            <div class="chart-loading-spinner"></div>
+          </div>
+          <canvas id="ticketChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-compact">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            <i class="bi bi-calendar-check"></i> Asset Allocation Trend
+          </div>
+          <div class="chart-actions">
+            <button class="chart-action-btn" title="View details" onclick="showChartDetails('allocChart')">
+              <i class="bi bi-three-dots"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-loading" id="allocChartLoading">
+            <div class="chart-loading-spinner"></div>
+          </div>
+          <canvas id="allocChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-charts-secondary">
+    <div class="col-12">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            <i class="bi bi-building"></i> Department-wise Allocations
+          </div>
+          <div class="chart-actions">
+            <button class="chart-action-btn" title="Export data" onclick="exportChartData('deptChart')">
+              <i class="bi bi-download"></i>
+            </button>
+            <button class="chart-action-btn" title="View details" onclick="showChartDetails('deptChart')">
+              <i class="bi bi-three-dots"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-loading" id="deptChartLoading">
+            <div class="chart-loading-spinner"></div>
+          </div>
+          <canvas id="deptChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+
+<!-- Tooltip element -->
+<div class="tooltip-custom" id="customTooltip"></div>
+
+<script>
+  /* NAVIGATION */
+  function navigateToAllAssets(){ window.location.href='/ams/asset/showAllAssets'; }
+  function navigateToFreeAssets(){ window.location.href='/ams/asset/fetchasset_data?inputRadio=Free'; }
+  function navigateToRepairAssets(){ window.location.href='/ams/asset/fetchasset_data?inputRadio=Repair'; }
+  function navigateToCondemnAssets(){ window.location.href='/ams/asset/fetchasset_data?inputRadio=Condemned'; }
+
+  /* COUNTERS */
+  function animate(id, end, suffix=""){
+    let ele = document.getElementById(id);
+    if (!ele) return;
+    let start = 0;
+    let endVal = parseInt(end, 10);
+    if (isNaN(endVal)) {
+        ele.innerText = end + suffix; 
+        return;
+    }
+    let step = Math.ceil(endVal / 40);
+    if (step === 0) step = 1; 
+
+    let iv = setInterval(()=>{
+      start += step;
+      if(start >= endVal){
+        ele.innerText = endVal.toLocaleString() + suffix;
+        clearInterval(iv);
+      } else {
+        ele.innerText = start.toLocaleString() + suffix;
+      }
+    }, 20);
+  }
+
+  /* Theme toggle */
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+  }
+
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+  }
+
+  function updateThemeIcon(theme) {
+    const themeIcon = document.querySelector('#themeToggle i');
+    themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+  }
+
+  /* Tooltip functionality */
+  function initTooltips() {
+    const tooltipElements = document.querySelectorAll('[data-tooltip]');
+    const tooltip = document.getElementById('customTooltip');
+    
+    tooltipElements.forEach(element => {
+      element.addEventListener('mouseenter', (e) => {
+        const text = e.target.getAttribute('data-tooltip');
+        tooltip.textContent = text;
+        tooltip.classList.add('show');
+        
+        const rect = e.target.getBoundingClientRect();
+        tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
+        tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
+      });
+      
+      element.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('show');
+      });
+    });
+  }
+
+  /* Chart actions */
+  function showChartDetails(chartId) {
+    // In a real implementation, this would open a modal with detailed chart information
+    console.log(`Showing details for chart: ${chartId}`);
+  }
+
+  function exportChartData(chartId) {
+    // In a real implementation, this would export the chart data
+    console.log(`Exporting data for chart: ${chartId}`);
+  }
+
+  /* Refresh functionality */
+  function refreshDashboard() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    refreshBtn.classList.add('spinning');
+    
+    // Add refreshing class to all stat cards
+    document.querySelectorAll('.stats-card').forEach(card => {
+      card.classList.add('refreshing');
+    });
+    
+    // Show loading states for charts
+    document.querySelectorAll('.chart-loading').forEach(loader => {
+      loader.style.display = 'flex';
+    });
+    
+    // Simulate data refresh - in a real app, this would fetch new data
+    setTimeout(() => {
+      refreshBtn.classList.remove('spinning');
+      document.querySelectorAll('.stats-card').forEach(card => {
+        card.classList.remove('refreshing');
+      });
+      
+      // Hide loading states for charts
+      document.querySelectorAll('.chart-loading').forEach(loader => {
+        loader.style.display = 'none';
+      });
+      
+      // Show success notification
+      showNotification('Dashboard data refreshed successfully', 'success');
+    }, 2000);
+  }
+
+  /* Notification system */
+  function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="bi bi-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+      </div>
+      <button class="notification-close">
+        <i class="bi bi-x"></i>
+      </button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => {
+      notification.classList.add('show');
+    }, 10);
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 300);
+    }, 3000);
+    
+    // Close button functionality
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+      notification.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 300);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Initialize theme
+    initTheme();
+    
+    // Initialize tooltips
+    initTooltips();
+    
+    // Theme toggle event
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    
+    // Refresh button event
+    document.getElementById('refreshBtn').addEventListener('click', refreshDashboard);
+    
+    /* SYNCED WITH BACKEND EXACT PAYLOAD */
+    const totalAssets = <%= finalTotal %>;
+    const totalValue  = <%= totalValue %>;
+    const utilization = <%= utilization %>;
+    const freeAssets  = <%= freeAssets %>;
+    const condemned   = <%= discardedAssets %>;
+    const repair      = <%= repairAssets %>;
+    const pieLabels   = <%- JSON.stringify(pielabels) %>;
+    const pieData     = <%- JSON.stringify(pie_a_cnt) %>;
+    const deptLabels  = <%- JSON.stringify(deptLabels) %>;
+    const deptCounts  = <%- JSON.stringify(dept_a_cnt) %>;
+    const allocTrend  = <%- JSON.stringify(assetCounts) %>;
+    const condTrend   = <%- JSON.stringify(cond_monthRes) %>;
+    const repairTrend = <%- JSON.stringify(repair_monthRes) %>;
+    const ticketData  = <%- JSON.stringify(ticketResults) %>;
+
+    /* COUNTERS */
+    animate("totalAssets", totalAssets);
+    animate("totalValue", totalValue);
+    animate("utilization", utilization, "%");
+    animate("freeAssets", freeAssets);
+    animate("condemnedAssets", condemned);
+    animate("repairAssets", repair);
+
+    /* CHART.JS OPTIONS */
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                padding: 12,
+                cornerRadius: 4,
+                displayColors: true,
+                boxPadding: 4
+            }
+        },
+        scales: {
+            x: {
+                ticks: { 
+                    font: { 
+                        size: 10, 
+                        family: 'Inter',
+                        weight: '500'
+                    } 
+                },
+                grid: { 
+                    display: false,
+                    drawBorder: false
+                }
+            },
+            y: {
+                ticks: { 
+                    font: { 
+                        size: 9, 
+                        family: 'Inter' 
+                    } 
+                },
+                grid: { 
+                    color: 'rgba(0, 0, 0, 0.03)', 
+                    drawBorder: false 
+                }
+            }
+        }
+    };
+    
+    const doughnutOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    font: { 
+                        size: 10, 
+                        family: 'Inter' 
+                    },
+                    padding: 12,
+                    boxWidth: 12,
+                    usePointStyle: true
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                padding: 12,
+                cornerRadius: 4,
+                displayColors: true,
+                boxPadding: 4
+            }
+        },
+        cutout: '65%'
+    };
+
+    /* Hide loading states after a short delay to simulate loading */
+    setTimeout(() => {
+      document.querySelectorAll('.chart-loading').forEach(loader => {
+        loader.style.display = 'none';
+      });
+    }, 1000);
+
+    /* PIE CHART */
+    new Chart(document.getElementById("pieChart"), {
+      type: "doughnut",
+      data: { 
+        labels: pieLabels, 
+        datasets: [{ 
+            data: pieData,
+            backgroundColor: [
+              'rgba(66, 153, 225, 0.8)',
+              'rgba(72, 187, 120, 0.8)',
+              'rgba(237, 137, 54, 0.8)',
+              'rgba(245, 101, 101, 0.8)',
+              'rgba(113, 128, 150, 0.8)',
+              'rgba(159, 122, 234, 0.8)'
+            ],
+            borderWidth: 0,
+            hoverOffset: 8
+        }] 
+      },
+      options: doughnutOptions
+    });
+
+    /* TICKET CHART */
+    new Chart(document.getElementById("ticketChart"), {
+      type: "doughnut",
+      data: {
+        labels: ["Total", "Pending", "Closed"],
+        datasets: [{
+          data: [
+            ticketData[0].t_tickets,
+            ticketData[0].t_pending,
+            ticketData[0].t_closed
+          ],
+          backgroundColor: [
+            'rgba(66, 153, 225, 0.8)',
+            'rgba(237, 137, 54, 0.8)',
+            'rgba(72, 187, 120, 0.8)'
+          ],
+          borderWidth: 0,
+          hoverOffset: 8
+        }]
+      },
+      options: doughnutOptions
+    });
+
+    /* ALLOCATION MONTHLY */
+    new Chart(document.getElementById("allocChart"), {
+      type: "bar",
+      data: {
+        labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+        datasets: [
+          { 
+            label:"Allocated", 
+            data: allocTrend.map(x=>x.asset_count), 
+            backgroundColor: 'rgba(66, 153, 225, 0.8)',
+            borderRadius: 4,
+            borderSkipped: false
+          },
+          { 
+            label:"Condemned", 
+            data: condTrend.map(x=>x.asset_count), 
+            backgroundColor: 'rgba(245, 101, 101, 0.8)',
+            borderRadius: 4,
+            borderSkipped: false
+          },
+          { 
+            label:"Repair", 
+            data: repairTrend.map(x=>x.asset_count), 
+            backgroundColor: 'rgba(237, 137, 54, 0.8)',
+            borderRadius: 4,
+            borderSkipped: false
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        plugins: {
+          ...chartOptions.plugins,
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              font: { size: 10, family: 'Inter' },
+              usePointStyle: true,
+              boxWidth: 6,
+              padding: 10
+            }
+          }
+        }
+      }
+    });
+
+    /* DEPARTMENT CHART */
+    new Chart(document.getElementById("deptChart"), {
+      type:"line",
+      data:{
+        labels: deptLabels,
+        datasets:[{ 
+            label:"Active Allocations", 
+            data: deptCounts, 
+            tension: 0.3,
+            borderColor: 'rgba(66, 153, 225, 1)',
+            backgroundColor: 'rgba(66, 153, 225, 0.1)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(66, 153, 225, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            fill: true
+        }]
+      },
+      options: chartOptions
+    });
+  });
+</script>
+
+
+
+<%- include('../partials/footer') %>

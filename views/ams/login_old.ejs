@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMS</title>
+  <link rel="stylesheet" type="text/css" href="/ams/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/ams/css/bootstrap-icons.css">
+  <link rel="stylesheet" href="/ams/css/custom.css">
+  <script src="/ams/js/jquery.min.js"></script>
+  <script src="/ams/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #e0e7ee); /* Light, subtle gradient */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .login-container {
+      display: flex;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      max-width: 900px; /* Adjusted max-width for a sleeker look */
+      width: 90%;
+      background-color: #ffffff;
+    }
+
+    .brand-section {
+      background-color: #f8fafd; /* Very light blue/gray */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      text-align: center;
+      position: relative;
+      width: 50%; /* Proportionally smaller */
+    }
+
+    .brand-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-size: cover;
+      opacity: 0.1; /* Very subtle background pattern */
+      border-radius: 20px; /* Apply border-radius for consistency */
+    }
+
+    .brand-section img {
+      max-width: 60%;
+      height: auto;
+      margin-bottom: 25px;
+      z-index: 1; /* Ensure content is above pseudo-element */
+    }
+
+    .brand-section h3 {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1.6rem;
+      z-index: 1;
+    }
+
+    .brand-section .app-title {
+      color: #252424; /* A nice brand color */
+      font-weight: 700;
+      font-size: 1.9rem;
+      letter-spacing: 2px;
+      z-index: 1;
+    }
+
+    .login-form-section {
+      background-color: #ffffff;
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 55%; /* Proportionally larger */
+      position: relative;
+    }
+
+    .login-form-section h1 {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 30px;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      color: #555;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 12px 15px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #00c3ff;
+      box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+      outline: none;
+    }
+
+    .input-group-text {
+      background-color: #f0f2f5;
+      border: 1px solid #e0e0e0;
+      border-right: none;
+      border-radius: 10px 0 0 10px;
+      padding: 12px 15px;
+      color: #777;
+    }
+
+    .btn-submit {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      width: 100%;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+    }
+
+    .btn-submit:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    }
+
+    .alert {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: fit-content;
+      max-width: 90%;
+      z-index: 1000;
+      padding: 15px 25px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    .alert-danger {
+      background-color: #feeaea;
+      color: #d64949;
+      border-left: 5px solid #d64949;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        flex-direction: column;
+        width: 95%;
+      }
+
+      .brand-section, .login-form-section {
+        width: 100%;
+        padding: 30px;
+      }
+
+      .brand-section {
+        border-radius: 20px 20px 0 0;
+      }
+
+      .login-form-section {
+        border-radius: 0 0 20px 20px;
+      }
+
+      .brand-section img {
+        max-width: 40%;
+      }
+
+      .brand-section h3 {
+        font-size: 1.4rem;
+      }
+
+      .brand-section .app-title {
+        font-size: 1.9rem;
+      }
+
+      .login-form-section h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="brand-section">
+      <img src="/ams/images/bdl_logo.png" alt="Bharat Dynamics Limited Logo">
+      <h3>भारत डायनामिक्स लिमिटेड </h3>
+      <h3>Bharat Dynamics Limited</h3>
+      <h3 class="app-title">AMS</i></h3>
+    </div>
+
+    <div class="login-form-section">
+      <% if (errorMessage || typeof error !== 'undefined') { %>
+        <div class="alert alert-danger" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          <%= errorMessage || error %>
+        </div>
+      <% } %>
+
+      <h1>User Login</h1>
+      <form action="/ams/login" method="post">
+        <div class="form-group">
+          <label for="u_id">
+            <i class="bi bi-person-fill me-2"></i>User Id
+          </label>
+          <input type="text" class="form-control" id="u_id" name="u_id" placeholder="Enter your SAP ID" required>
+        </div>
+        <div class="form-group">
+          <label for="u_password">
+            <i class="bi bi-key-fill me-2"></i>Password
+          </label>
+          <input type="password" class="form-control" id="u_password" name="u_password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-submit">
+          <i class="bi bi-shield-lock me-2"></i>Login
+        </button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

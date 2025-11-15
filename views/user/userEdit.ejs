@@ -1,0 +1,72 @@
+<%- include('../partials/header') %>
+  <div class="container text-center">
+
+    <h3 class="mt-5">Edit User Details </h3>
+    <% if (errorMessage) { %>
+      <div class="alert alert-danger">
+        <%= errorMessage %>
+      </div>
+      <% } %>
+        <% if (successMessage) { %>
+          <div class="alert alert-success">
+            <%= successMessage %>
+          </div>
+          <% } %>
+
+            <form action="/user/<%= user.sap_id %>/edit" method="post">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="leg_id">Legacy ID</label>
+                    <input type="number" class="form-control" id="leg_id" name="leg_id" value="<%= user.leg_id %>">
+                  </div>
+                  <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="division">Division</label>
+                    <input type="text" class="form-control" id="division" name="division" value="<%= user.division %>">
+                  </div>
+                  <div class="form-group">
+                    <label for="department">Department</label>
+                    <input type="text" class="form-control" id="department" name="department"
+                      value="<%= user.department %>">
+                  </div>
+                  <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" class="form-control" id="dob" name="dob" value="<%= user.dob %>">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control" id="status" name="status">
+                      <option value="Working" <%=user.status==='Working' ? 'selected' : '' %>>Working</option>
+                      <option value="Transferred" <%=user.status==='Transferred' ? 'selected' : '' %>>Transferred
+                      </option>
+                      <option value="Retired" <%=user.status==='Retired' ? 'selected' : '' %>>Retired</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="theme">Theme</label>
+                    <input type="text" class="form-control" id="theme" name="theme" value="<%= user.theme %>">
+                  </div>
+                  <div class="form-group">
+                    <label for="unit_location">Unit Location</label>
+                    <input type="text" class="form-control" id="unit_location" name="unit_location"
+                      value="<%= user.unit_location %>">
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+
+
+  </div>
+
+
+  <%- include('../partials/footer') %>

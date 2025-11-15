@@ -1,0 +1,1007 @@
+
+
+<%- include('../../partials/header') %>
+
+<style>
+  /* Modern design system - more compact */
+  :root {
+    --primary-color: #4361ee;
+    --primary-hover: #3651de;
+    --secondary-color: #3f37c9;
+    --success-color: #06ffa5;
+    --warning-color: #ffbe0b;
+    --danger-color: #f72585;
+    --dark-color: #2b2d42;
+    --light-color: #f8f9fa;
+    --border-color: #e9ecef;
+    --text-muted: #6c757d;
+    --bg-subtle: #f1f3f5;
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius: 0.375rem;
+    --radius-lg: 0.5rem;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--dark-color);
+    background-color: var(--light-color);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .container-main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  /* Header section - more compact */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin: 0;
+  }
+
+  .page-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+
+  /* Toolbar - more compact */
+  .toolbar {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .search-container {
+    position: relative;
+    flex: 1;
+    max-width: 350px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+  }
+
+  #searchInput {
+    padding-left: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    transition: var(--transition);
+  }
+
+  #searchInput:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+    outline: none;
+  }
+
+  .filter-container {
+    display: flex;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-chip {
+    padding: 0.375rem 0.75rem;
+    border-radius: 1.5rem;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    background: white;
+    user-select: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+
+  .filter-chip:hover {
+    background-color: var(--bg-subtle);
+  }
+
+  .filter-chip.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+  }
+
+  .filter-chip .badge {
+    margin-left: 0.25rem;
+    padding: 0.125rem 0.375rem;
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    font-size: 0.625rem;
+    font-weight: 600;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  /* Buttons - more compact */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem 0.75rem;
+    font-weight: 500;
+    border-radius: var(--radius);
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+  }
+
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-outline-secondary {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: var(--bg-subtle);
+    color: var(--dark-color);
+  }
+
+  /* Table - more compact */
+  .table-container {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+
+  .tabulator {
+    border: none;
+  }
+
+  .tabulator .tabulator-header {
+    background-color: var(--bg-subtle);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .tabulator .tabulator-header .tabulator-col {
+    border-right: none;
+    font-weight: 600;
+    color: var(--dark-color);
+    font-size: 0.75rem;
+    padding: 0.5rem 0.375rem;
+  }
+
+  .tabulator .tabulator-row {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .tabulator .tabulator-row:hover {
+    background-color: rgba(67, 97, 238, 0.05);
+  }
+
+  .tabulator .tabulator-row .tabulator-cell {
+    border-right: none;
+    padding: 0.5rem 0.375rem;
+    font-size: 0.75rem;
+  }
+
+  /* Status badges - more compact */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .status-free {
+    background-color: rgba(6, 255, 165, 0.1);
+    color: #04a46f;
+  }
+
+  .status-alloted {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary-color);
+  }
+
+  .status-repair {
+    background-color: rgba(255, 190, 11, 0.1);
+    color: #d19e0a;
+  }
+
+  .status-condemned {
+    background-color: rgba(247, 37, 133, 0.1);
+    color: #c9184a;
+  }
+
+  .table-actions {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .table-actions .btn {
+    min-width: auto;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
+  }
+
+  /* Modals - more compact */
+  .modal-content {
+    border: none;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem;
+  }
+
+  .modal-title {
+    font-weight: 600;
+    color: var(--dark-color);
+    font-size: 1rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 1rem;
+  }
+
+  .form-label {
+    font-weight: 500;
+    margin-bottom: 0.375rem;
+    color: var(--dark-color);
+    font-size: 0.75rem;
+  }
+
+  .form-control {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 0.375rem 0.625rem;
+    transition: var(--transition);
+    font-size: 0.75rem;
+  }
+
+  .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+    outline: none;
+  }
+
+  /* Loader - more compact */
+  .loader-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 4000;
+  }
+
+  .loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .spinner-border {
+    width: 2rem;
+    height: 2rem;
+    border-width: 0.2rem;
+    color: var(--primary-color);
+  }
+
+  /* Toast - more compact */
+  #toastContainer {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 5000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .toast {
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    font-size: 0.75rem;
+  }
+
+  .toast.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .toast-success {
+    background-color: var(--success-color);
+    color: #04a46f;
+  }
+
+  .toast-warning {
+    background-color: var(--warning-color);
+    color: #b78a00;
+  }
+
+  .toast-danger {
+    background-color: var(--danger-color);
+    color: #c9184a;
+  }
+
+  .toast-icon {
+    font-size: 1rem;
+  }
+
+  .toast-message {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .toast-close {
+    background: none;
+    border: none;
+    opacity: 0.7;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .toast-close:hover {
+    opacity: 1;
+  }
+
+  /* History modal - more compact */
+  .history-item {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .history-item:last-child {
+    border-bottom: none;
+  }
+
+  .history-event {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .history-details {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-bottom: 0.375rem;
+  }
+
+  .history-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.625rem;
+    color: var(--text-muted);
+  }
+
+  /* Success modal - more compact */
+  .success-modal .modal-content {
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .success-icon {
+    color: var(--success-color);
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Responsive improvements */
+  @media (max-width: 768px) {
+    .container-main {
+      padding: 0.75rem;
+    }
+
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+
+    .search-container {
+      max-width: 100%;
+    }
+
+    .filter-container {
+      justify-content: center;
+    }
+
+    .action-buttons {
+      justify-content: center;
+    }
+
+    .table-actions {
+      flex-direction: column;
+    }
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+</style>
+
+<div class="container-main">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Asset Management</h1>
+      <p class="page-subtitle">Track and manage your organization's assets</p>
+    </div>
+    <div class="action-buttons">
+      <button id="exportBtn" class="btn btn-outline-secondary">
+        <i class="bi bi-download me-1"></i>Export
+      </button>
+      <button id="refreshBtn" class="btn btn-primary">
+        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-container">
+      <i class="bi bi-search search-icon"></i>
+      <input id="searchInput" class="form-control" placeholder="Search tag, SAP ID, description..." aria-label="Search assets" />
+    </div>
+    <div class="filter-container" role="tablist" aria-label="asset filters">
+      <button class="filter-chip active" data-filter="all" role="tab">
+        All <span class="badge">0</span>
+      </button>
+      <button class="filter-chip" data-filter="free" role="tab">
+        Free <span class="badge">0</span>
+      </button>
+      <button class="filter-chip" data-filter="alloted" role="tab">
+        Alloted <span class="badge">0</span>
+      </button>
+      <button class="filter-chip" data-filter="repair" role="tab">
+        Repair <span class="badge">0</span>
+      </button>
+      <button class="filter-chip" data-filter="condemned" role="tab">
+        Condemned <span class="badge">0</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div id="assetsTable" aria-live="polite" aria-busy="false"></div>
+  </div>
+</div>
+
+<!-- Allocate modal -->
+<div class="modal fade" id="allocModal" tabindex="-1" aria-hidden="true" aria-labelledby="allocModalLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="allocModalLabel">Allocate / Reallocate Asset</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="allocForm" class="needs-validation" novalidate>
+        <div class="modal-body">
+          <div class="mb-2 p-2 bg-light rounded">
+            <div class="mb-1"><strong>Tag:</strong> <span id="allocTag" class="muted-small"></span></div>
+            <div><strong>Description:</strong> <span id="allocDesc" class="muted-small"></span></div>
+          </div>
+
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label">Employee name</label>
+              <input class="form-control" name="empname" id="empname" required aria-required="true" />
+              <div class="invalid-feedback">Employee name required</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">SAP ID</label>
+              <input class="form-control" name="sapid" id="sapid" required aria-required="true" />
+              <div class="invalid-feedback">SAP ID required</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Department</label>
+              <input class="form-control" name="department" id="department" required />
+              <div class="invalid-feedback">Department required</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Division</label>
+              <input class="form-control" name="division" id="division" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Building</label>
+              <input class="form-control" name="building" id="building" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input class="form-control" name="phone" id="phone" />
+            </div>
+
+            <!-- hidden fields -->
+            <input type="hidden" id="alloc_uniqueId" name="al_uniqueId" />
+            <input type="hidden" id="alloc_description" name="description" />
+            <input type="hidden" id="alloc_value" name="value" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" id="allocSubmit">
+            <i class="bi bi-check-circle me-1"></i>Allocate
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Deallocate modal -->
+<div class="modal fade" id="deallocModal" tabindex="-1" aria-hidden="true" aria-labelledby="deallocModalLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deallocModalLabel">Deallocate Asset</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form id="deallocForm" novalidate>
+        <div class="modal-body">
+          <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div>Mark <strong id="deallocTag"></strong> as free?</div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Reason (optional)</label>
+            <textarea id="deallocReason" name="reason" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button id="deallocConfirm" class="btn btn-warning">
+            <i class="bi bi-x-circle me-1"></i>Deallocate
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- History modal -->
+<div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true" aria-labelledby="historyModalLabel">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="historyModalLabel">Asset History: <span id="historyTag" class="muted-small"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="historyList"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success modal -->
+<div class="modal fade success-modal" id="successModal" tabindex="-1" aria-hidden="true" aria-labelledby="successModalLabel">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <i class="bi bi-check-circle-fill success-icon"></i>
+        <h5 id="successMessage" class="mb-0">Success</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loader overlay -->
+<div class="loader-overlay" id="loader" aria-hidden="true">
+  <div class="loader-content">
+    <div class="spinner-border" role="status" aria-hidden="true"></div>
+    <p class="text-muted">Loading...</p>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toastContainer" aria-live="polite"></div>
+
+<script>
+(() => {
+  // -------------------- utilities --------------------
+  const loaderEl = document.getElementById('loader');
+  function showLoader(){ 
+    loaderEl.style.display = 'flex'; 
+    loaderEl.setAttribute('aria-hidden','false'); 
+    document.getElementById('assetsTable').setAttribute('aria-busy','true'); 
+  }
+  function hideLoader(){ 
+    loaderEl.style.display = 'none'; 
+    loaderEl.setAttribute('aria-hidden','true'); 
+    document.getElementById('assetsTable').setAttribute('aria-busy','false'); 
+  }
+
+  function safeJSON(obj){ try { return JSON.parse(JSON.stringify(obj)); } catch(e) { return obj; } }
+
+  // toast helper (small, non-blocking)
+  function showToast(message, type = 'success', duration = 3000){
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icon = type === 'success' ? 'check-circle-fill' : 
+                 type === 'warning' ? 'exclamation-triangle-fill' : 
+                 'x-circle-fill';
+    
+    toast.innerHTML = `
+      <i class="bi bi-${icon} toast-icon"></i>
+      <div class="toast-message">${message}</div>
+      <button class="toast-close" aria-label="Close">
+        <i class="bi bi-x"></i>
+      </button>
+    `;
+    
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.addEventListener('click', () => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    });
+    
+    document.getElementById('toastContainer').appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Auto dismiss
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+
+  function showSuccessModal(msg){
+    document.getElementById('successMessage').innerText = msg;
+    const m = new bootstrap.Modal(document.getElementById('successModal'));
+    m.show();
+    setTimeout(() => m.hide(), 2000);
+  }
+
+  // fetch wrapper with timeout and JSON parsing
+  async function fetchJSON(url, opts = {}, timeout = 15000){
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    opts.signal = controller.signal;
+    try {
+      const res = await fetch(url, opts);
+      clearTimeout(id);
+      const json = await res.json().catch(()=>({ success: false, message: 'Bad JSON' }));
+      return { ok: res.ok, status: res.status, json };
+    } catch (err) {
+      clearTimeout(id);
+      throw err;
+    }
+  }
+
+  // -------------------- Tabulator table --------------------
+  let table = null;
+  let currentFilter = 'all';
+  let currentQuery = '';
+  let assetCounts = { all: 0, free: 0, alloted: 0, repair: 0, condemned: 0 };
+
+  function initTable(){
+    if(table) return;
+    table = new Tabulator("#assetsTable", {
+      layout:"fitColumns",
+      placeholder:"No results found",
+      pagination:"local",
+      paginationSize:25,
+      height:"500px",
+      columns:[
+        {title:"Tag", field:"al_uniqueId", width:150, headerFilter:true, formatter:function(cell, formatterParams, onRendered){
+          return `<strong>${cell.getValue()}</strong>`;
+        }},
+        {title:"Description", field:"al_description", widthGrow:2, formatter: "plaintext"},
+        {title:"Status", field:"al_status", width:100, hozAlign:"center", headerFilter:false, formatter:function(cell, formatterParams, onRendered){
+          const value = cell.getValue();
+          const statusClass = value.toLowerCase().replace(' ', '-');
+          return `<span class="status-badge status-${statusClass}">${value}</span>`;
+        }},
+        {title:"Allocated To", field:"al_allocatedTo", width:150},
+        {title:"SAP ID", field:"al_sapid", width:100},
+        {title:"Department", field:"al_department", width:140},
+        {title:"Cycles", field:"al_cycle_count", hozAlign:"center", width:80},
+        {title:"Actions", hozAlign:"center", width:280, headerSort:false, formatter:function(cell){
+          const d = cell.getRow().getData();
+          const canAllocate = d.al_status === 'Free';
+          const canDeallocate = (d.al_status !== 'Free' && d.al_status !== 'Condemned' && d.al_status !== 'Repair');
+          
+          return `
+            <div class="table-actions">
+              <button class="btn btn-sm btn-outline-secondary view-history" data-tag="${d.al_uniqueId}" aria-label="View history ${d.al_uniqueId}">
+                <i class="bi bi-clock-history"></i>
+              </button>
+
+              <button class="btn btn-sm btn-primary allocate" data-tag="${d.al_uniqueId}" data-desc="${encodeURIComponent(d.al_description||'')}" data-value="${d.al_value||0}" ${canAllocate ? '' : 'disabled'} aria-label="Allocate ${d.al_uniqueId}">
+                <i class="bi bi-person-plus"></i>
+              </button>
+
+              <button class="btn btn-sm btn-warning deallocate" data-tag="${d.al_uniqueId}" ${canDeallocate ? '' : 'disabled'} aria-label="Deallocate ${d.al_uniqueId}">
+                <i class="bi bi-person-dash"></i>
+              </button>
+            </div>
+          `;
+        }}
+      ]
+    });
+  }
+
+  // -------------------- load assets --------------------
+  async function loadAssets(){
+    try {
+      showLoader();
+      const url = `/ams/api/assets?filter=${encodeURIComponent(currentFilter)}&q=${encodeURIComponent(currentQuery||'')}`;
+      const { ok, json } = await fetchJSON(url, { method: 'GET' });
+      if (!ok || !json.success) {
+        throw new Error((json && json.message) || 'Failed to load assets');
+      }
+      
+      // Update asset counts
+      assetCounts = json.counts || { all: 0, free: 0, alloted: 0, repair: 0, condemned: 0 };
+      updateFilterBadges();
+      
+      // Replace table data
+      table.replaceData(json.data || []);
+    } catch (err) {
+      console.error('Load assets error', err);
+      showToast('Failed to load assets', 'danger');
+    } finally {
+      hideLoader();
+    }
+  }
+
+  // Update filter badges with counts
+  function updateFilterBadges() {
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      const filter = chip.getAttribute('data-filter');
+      const badge = chip.querySelector('.badge');
+      if (badge) {
+        badge.textContent = assetCounts[filter] || 0;
+      }
+    });
+  }
+
+  // -------------------- toolbar wiring --------------------
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentFilter = chip.getAttribute('data-filter');
+      loadAssets();
+    });
+  });
+
+  document.getElementById('refreshBtn').addEventListener('click', loadAssets);
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    showToast('Export functionality coming soon', 'warning');
+  });
+
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('keyup', (e) => {
+    currentQuery = e.target.value;
+    if (e.key === 'Enter') loadAssets();
+  });
+
+  // -------------------- event delegation for row actions --------------------
+  document.addEventListener('click', async (ev) => {
+    const btn = ev.target.closest('button');
+    if (!btn) return;
+
+    // ALLOCATE button -> open modal prefilled
+    if (btn.classList.contains('allocate')) {
+      const tag = btn.dataset.tag;
+      const desc = decodeURIComponent(btn.dataset.desc || '');
+      const val = btn.dataset.value || 0;
+
+      document.getElementById('allocTag').textContent = tag;
+      document.getElementById('allocDesc').textContent = desc;
+      document.getElementById('alloc_uniqueId').value = tag;
+      document.getElementById('alloc_description').value = desc;
+      document.getElementById('alloc_value').value = val;
+
+      // Clear form
+      document.getElementById('allocForm').reset();
+      // Open modal
+      new bootstrap.Modal(document.getElementById('allocModal')).show();
+    }
+
+    // DEALLOCATE button -> open modal
+    if (btn.classList.contains('deallocate')) {
+      const tag = btn.dataset.tag;
+      document.getElementById('deallocTag').textContent = tag;
+      document.getElementById('deallocReason').value = '';
+      new bootstrap.Modal(document.getElementById('deallocModal')).show();
+    }
+
+    // VIEW HISTORY -> fetch and render audit list
+    if (btn.classList.contains('view-history')) {
+      const tag = btn.dataset.tag;
+      document.getElementById('historyTag').textContent = tag;
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = `<div class="text-center p-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Loading history...</p></div>`;
+      new bootstrap.Modal(document.getElementById('historyModal')).show();
+
+      try {
+        const { ok, json } = await fetchJSON(`/ams/api/asset/history/${encodeURIComponent(tag)}`, { method: 'GET' });
+        if (!ok || !json.success) throw new Error(json.message || 'Failed to fetch history');
+
+        historyList.innerHTML = '';
+        const rows = json.data || [];
+        if (!rows.length) {
+          historyList.innerHTML = `<div class="text-center p-4 text-muted">No history available</div>`;
+        } else {
+          rows.forEach(row => {
+            const item = document.createElement('div');
+            item.className = 'history-item fade-in';
+            const ts = row.createdAt ? new Date(row.createdAt).toLocaleString() : '—';
+            
+            item.innerHTML = `
+              <div class="history-event">${row.event}</div>
+              <div class="history-details">${row.details || ''}</div>
+              <div class="history-meta">
+                <span>${ts}</span>
+                <span>By: <strong>${row.performed_by || 'N/A'}</strong> (${row.performed_by_role || 'User'})</span>
+              </div>
+            `;
+            historyList.appendChild(item);
+          });
+        }
+      } catch (err) {
+        historyList.innerHTML = `<div class="alert alert-danger">Failed to load history: ${err.message}</div>`;
+        console.error('history fetch error', err);
+      }
+    }
+  });
+
+  // -------------------- allocate form submit --------------------
+  document.getElementById('allocForm').addEventListener('submit', async function(ev){
+    ev.preventDefault();
+    const form = ev.target;
+
+    // Bootstrap validation
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
+    }
+
+    const fd = new FormData(form);
+    const payload = {};
+    fd.forEach((v,k)=> payload[k]=v);
+
+    try {
+      showLoader();
+      const { ok, json } = await fetchJSON('/ams/api/asset/allocate', {
+        method:'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!ok || !json.success) {
+        throw new Error(json.message || 'Allocation failed');
+      }
+
+      // Close modal, show success state, refresh table
+      bootstrap.Modal.getInstance(document.getElementById('allocModal')).hide();
+      showSuccessModal('Asset allocated successfully');
+      showToast('Asset allocated', 'success');
+      await loadAssets();
+    } catch (err) {
+      console.error('allocate error', err);
+      showToast(err.message || 'Allocate failed', 'danger');
+    } finally {
+      hideLoader();
+    }
+  });
+
+  // -------------------- deallocate confirm --------------------
+  document.getElementById('deallocForm').addEventListener('submit', (ev) => ev.preventDefault());
+  document.getElementById('deallocConfirm').addEventListener('click', async function(){
+    const tag = document.getElementById('deallocTag').textContent;
+    const reason = document.getElementById('deallocReason').value || null;
+
+    try {
+      showLoader();
+      const { ok, json } = await fetchJSON('/ams/api/asset/deallocate', {
+        method:'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ al_uniqueId: tag, reason })
+      });
+
+      if (!ok || !json.success) throw new Error(json.message || 'Deallocate failed');
+
+      bootstrap.Modal.getInstance(document.getElementById('deallocModal')).hide();
+      showSuccessModal('Asset deallocated');
+      showToast('Asset deallocated', 'success');
+      await loadAssets();
+    } catch (err) {
+      console.error('deallocate error', err);
+      showToast(err.message || 'Deallocate failed', 'danger');
+    } finally {
+      hideLoader();
+    }
+  });
+
+  // -------------------- init --------------------
+  initTable();
+  loadAssets();
+
+  // Expose a manual refresh hook
+  window.AMS = {
+    reloadAssets: loadAssets
+  };
+})();
+</script>
+
+<%- include('../../partials/footer') %>

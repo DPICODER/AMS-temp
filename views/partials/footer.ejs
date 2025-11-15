@@ -1,0 +1,97 @@
+</div>
+</div>
+
+<footer class="footer text-center">
+ 
+    <left:span class="fw-bold" id="time-left">--:-- </left:span>
+    <i> </i><strong><i class="bi bi-clock-history"></i></strong>
+ 
+
+    <!--span id="currentDateTime">
+    </span--> |
+    <%= process.env.APP_FULL_NAME %> (<%= process.env.DB_CORE_NAME %>)|
+        V_ <%= process.env.APP_VERSION %> |
+          ITD-BDL
+
+</footer>
+<script>
+
+  function formatTime(ms) {
+    var totalSeconds = Math.floor(ms / 1000);
+    var minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+    var seconds = String(totalSeconds % 60).padStart(2, '0');
+    return minutes + ':' + seconds
+  }
+
+
+
+  let idleTime = 0;
+  const IDLE_LIMIT_MINUTES = <%= process.env.SESSION_IDLE_LIMIT %>;
+
+  function resetIdleTimer() {
+    idleTime = 0;
+  }
+
+  function updateDateTime() {
+    const currentDateTime = new Date();
+
+    const year = currentDateTime.getFullYear();
+    const month = String(currentDateTime.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so +1
+    const day = String(currentDateTime.getDate()).padStart(2, '0');
+    const hours = String(currentDateTime.getHours()).padStart(2, '0');
+    const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDateTime.getSeconds()).padStart(2, '0');
+
+  }
+
+
+  function startSessionTime() {
+    $.get('/core/session-time-left', function (response) {
+      var timeLeft = response.timeLeft;
+
+      if (window.sessionInterval) {
+        clearInterval(window.sessionInterval);
+      }
+
+
+      window.sessionInterval = setInterval(function () {
+        if (timeLeft <= 5000) {
+          clearInterval(window.sessionInterval);
+          triggerLogoutDueToInactivity("Logged Out! Due to Session Expiry..");
+        } else {
+          $('#time-left').text(formatTime(timeLeft));
+          timeLeft -= 1000;
+        }
+      }, 1000);
+    });
+  }
+
+  function triggerLogoutDueToInactivity(Reason) {
+    window.location.href = `/ams/logout?TimeOut=${Reason}`;
+  }
+
+
+  window.onload = () => {
+    resetIdleTimer;
+    // document.onmousemove = resetIdleTimer;
+    // document.onkeydown = resetIdleTimer;
+    // document.onclick = resetIdleTimer;
+    // document.onscroll = resetIdleTimer;
+
+
+    // setInterval(() => {
+    //   idleTime++;
+    //   if (idleTime >= IDLE_LIMIT_MINUTES) {
+    //     triggerLogoutDueToInactivity("Logged Out! Due to Inactivity..");
+    //   }
+    // }, 60000)
+
+    startSessionTime();
+    updateDateTime(); // Set the initial date and time
+    setInterval(updateDateTime, 1000); // Update the date and time every second
+  };
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,1138 @@
+<%- include('../../partials/header') %>
+
+<style>
+:root {
+  /* Enhanced color palette */
+  --primary: #1e293b;
+  --primary-light: #334155;
+  --secondary: #475569;
+  --muted: #64748b;
+  --accent: #0ea5e9;
+  --accent-dark: #0284c7;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg: #f4f6f9;
+  --bg-secondary: #e2e8f0;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05);
+  --radius: 8px; /* Reduced from 12px */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark mode support */
+[data-theme="dark"] {
+  --primary: #f1f5f9;
+  --primary-light: #e2e8f0;
+  --secondary: #cbd5e1;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --accent-dark: #0ea5e9;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --bg: #0f172a;
+  --bg-secondary: #1e293b;
+  --card: #1e293b;
+  --border: #334155;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.3), 0 4px 6px rgba(0,0,0,0.2);
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: var(--primary);
+  transition: var(--transition);
+  font-size: 0.9rem; /* Reduced base font size */
+}
+
+.container-main {
+  max-width: 1400px;
+  margin: 1rem auto; /* Reduced from 2rem */
+  padding: 0 1rem; /* Reduced from 1.5rem */
+}
+
+/* Header section */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem; /* Reduced from 2rem */
+  padding-bottom: 0.5rem; /* Reduced from 1rem */
+  border-bottom: 1px solid var(--border);
+}
+
+.page-title {
+  font-size: 1.5rem; /* Reduced from 1.75rem */
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Reduced from 0.75rem */
+}
+
+.page-title i {
+  color: var(--accent);
+  font-size: 1.25rem; /* Reduced from 1.5rem */
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.75rem; /* Reduced from 1rem */
+  align-items: center;
+}
+
+.year-selector {
+  position: relative;
+}
+
+.year-selector select {
+  appearance: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.375rem 2rem 0.375rem 0.75rem; /* Reduced padding */
+  font-weight: 500;
+  color: var(--primary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.875rem; /* Reduced font size */
+}
+
+.year-selector select:hover {
+  border-color: var(--accent);
+}
+
+.year-selector select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.year-selector::after {
+  content: '\f078';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 0.75rem; /* Reduced from 1rem */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--muted);
+}
+
+.theme-toggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 36px; /* Reduced from 40px */
+  height: 36px; /* Reduced from 40px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--muted);
+}
+
+.theme-toggle:hover {
+  background: var(--accent);
+  color: white;
+  transform: rotate(180deg);
+}
+
+/* Card styles */
+.card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  margin-bottom: 1rem; /* Reduced from 1.5rem */
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1rem; /* Reduced from 1.25rem 1.5rem */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  font-size: 1.125rem; /* Reduced from 1.25rem */
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem; /* Reduced from 0.5rem */
+}
+
+.card-title i {
+  color: var(--accent);
+  font-size: 1rem; /* Reduced from 1.1rem */
+}
+
+.card-subtitle {
+  font-size: 0.75rem; /* Reduced from 0.875rem */
+  color: var(--muted);
+  margin-top: 0.125rem; /* Reduced from 0.25rem */
+}
+
+.card-body {
+  padding: 1rem; /* Reduced from 1.5rem */
+}
+
+/* Button styles */
+.btn {
+  border-radius: 4px; /* Reduced from 6px */
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem; /* Reduced from 0.5rem */
+  border: 1px solid transparent;
+  font-size: 0.8rem; /* Reduced font size */
+}
+
+.btn:hover {
+  transform: translateY(-1px); /* Reduced from -2px */
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+.btn-success {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: #16a34a;
+  border-color: #16a34a;
+}
+
+.btn-warning {
+  background: var(--warning);
+  border-color: var(--warning);
+  color: white;
+}
+
+.btn-warning:hover {
+  background: #d97706;
+  border-color: #d97706;
+}
+
+.btn-outline-secondary {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--primary);
+}
+
+.btn-outline-secondary:hover {
+  background: var(--bg-secondary);
+  border-color: var(--secondary);
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem; /* Reduced from 0.375rem 0.75rem */
+  font-size: 0.75rem; /* Reduced from 0.875rem */
+}
+
+.btn-action {
+  min-width: 60px; /* Reduced from 72px */
+}
+
+/* Tabulator table styles */
+.tabulator {
+  font-size: 0.8rem; /* Reduced font size */
+}
+
+.tabulator .tabulator-header {
+  background-color: var(--bg-secondary);
+  border-bottom: 2px solid var(--border);
+}
+
+.tabulator .tabulator-header .tabulator-col {
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 0.375rem 0.5rem; /* Reduced padding */
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content {
+  padding: 0.25rem 0.5rem; /* Reduced padding */
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-title {
+  font-weight: 600;
+  font-size: 0.8rem; /* Reduced font size */
+}
+
+.tabulator .tabulator-tableholder {
+  font-size: 0.8rem; /* Reduced font size */
+}
+
+.tabulator .tabulator-row {
+  border-bottom: 1px solid var(--border);
+  min-height: 32px; /* Reduced from default */
+}
+
+.tabulator .tabulator-row .tabulator-cell {
+  padding: 0.375rem 0.5rem; /* Reduced padding */
+}
+
+.tabulator .tabulator-row:hover {
+  background-color: var(--bg-secondary);
+}
+
+.tabulator .tabulator-footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 0.375rem 0.5rem; /* Reduced padding */
+}
+
+.tabulator .tabulator-footer .tabulator-paginator {
+  margin: 0;
+}
+
+.tabulator .tabulator-footer .tabulator-page {
+  margin: 0 2px; /* Reduced margin */
+  padding: 0.25rem 0.5rem; /* Reduced padding */
+}
+
+/* Loader overlay */
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 36, 0.25);
+  backdrop-filter: blur(2px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.loader-overlay.show {
+  display: flex;
+}
+
+.spinner {
+  width: 40px; /* Reduced from 50px */
+  height: 40px; /* Reduced from 50px */
+  border: 3px solid var(--border); /* Reduced from 4px */
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Toast container */
+.toast-container {
+  position: fixed;
+  top: 0.75rem; /* Reduced from 1rem */
+  right: 0.75rem; /* Reduced from 1rem */
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* Reduced from 0.75rem */
+}
+
+.toast {
+  min-width: 250px; /* Reduced from 300px */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Reduced from 0.75rem */
+  color: white;
+  transform: translateX(120%);
+  transition: transform 0.3s ease;
+  font-size: 0.875rem; /* Reduced font size */
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast-success {
+  background-color: var(--success);
+}
+
+.toast-danger {
+  background-color: var(--danger);
+}
+
+.toast-warning {
+  background-color: var(--warning);
+}
+
+.toast-info {
+  background-color: var(--accent);
+}
+
+/* Modal improvements */
+.modal-content {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  background: var(--card);
+  color: var(--primary);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem; /* Reduced from 1.5rem */
+}
+
+.modal-title {
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem; /* Reduced from 0.5rem */
+  font-size: 1.125rem; /* Reduced font size */
+}
+
+.modal-title i {
+  color: var(--accent);
+}
+
+.modal-body {
+  padding: 1rem; /* Reduced from 1.5rem */
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border);
+  padding: 1rem; /* Reduced from 1.5rem */
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.375rem; /* Reduced from 0.5rem */
+  color: var(--primary);
+  font-size: 0.875rem; /* Reduced font size */
+}
+
+.form-control {
+  border: 1px solid var(--border);
+  border-radius: 4px; /* Reduced from 6px */
+  padding: 0.5rem 0.75rem; /* Reduced padding */
+  transition: var(--transition);
+  background: var(--card);
+  color: var(--primary);
+  font-size: 0.875rem; /* Reduced font size */
+}
+
+.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+  outline: none;
+}
+
+/* Success panel styles */
+.checkmark {
+  width: 60px; /* Reduced from 80px */
+  height: 60px; /* Reduced from 80px */
+  border-radius: 50%;
+  border: 3px solid var(--success); /* Reduced from 4px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pop 0.35s ease-out forwards;
+}
+
+.checkmark::after {
+  content: "";
+  width: 20px; /* Reduced from 26px */
+  height: 36px; /* Reduced from 48px */
+  border-right: 4px solid var(--success); /* Reduced from 5px */
+  border-bottom: 4px solid var(--success); /* Reduced from 5px */
+  transform: rotate(45deg);
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideUp 0.45s ease forwards;
+}
+
+@keyframes fadeSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container-main {
+    padding: 0 0.75rem; /* Reduced from 1rem */
+    margin: 0.75rem auto; /* Reduced from 1rem */
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem; /* Reduced from 1rem */
+  }
+  
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem; /* Reduced from 0.75rem */
+  }
+  
+  .tabulator .tabulator-row .tabulator-cell {
+    padding: 0.25rem 0.125rem; /* Further reduced */
+    font-size: 0.75rem; /* Further reduced */
+  }
+}
+</style>
+
+<div class="container-main">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-actions">
+      <div class="year-selector">
+        <select id="yearselect" class="form-select">
+          <% 
+            const currentYear = (typeof sYear !== 'undefined') ? sYear : new Date().getFullYear();
+            const start = currentYear - 6;
+            for (let i = currentYear; i >= start; i--) {
+          %>
+            <option value="<%= i %>" <%= (i == sYear) ? 'selected' : '' %>><%= i %></option>
+          <% } %>
+        </select>
+      </div>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <i class="bi bi-moon-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Master Table card -->
+  <div class="card shadow-sm">
+    <div class="card-header">
+      <div>
+        <h5 class="card-title">
+          <i class="bi bi-list-ul"></i> Acquisition Master List
+        </h5>
+        <div class="card-subtitle">Click View Items to inspect line-items for a PO</div>
+      </div>
+      <div>
+        <button id="refreshBtn" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+      </div>
+    </div>
+    <div class="card-body p-2"> <!-- Reduced padding -->
+      <div id="MasterAssetAcquisition"></div>
+    </div>
+  </div>
+
+  <!-- Line Items card (hidden initially) -->
+  <div id="lineItemsCard" class="card shadow-sm" style="display:none;">
+    <div class="card-header">
+      <div>
+        <h5 class="card-title">
+          <i class="bi bi-list-check"></i> Line Items for PO: <span id="displayPONo" class="fw-bold"></span>
+        </h5>
+        <div id="lineItemsNote" class="card-subtitle">Edit only allowed before allocation.</div>
+      </div>
+      <div>
+        <button id="hideLineItems" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-chevron-up"></i> Hide
+        </button>
+      </div>
+    </div>
+    <div class="card-body p-2"> <!-- Reduced padding -->
+      <div id="Table_AcquLineItems"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Allot Asset Modal -->
+<div class="modal fade" id="allotAssetModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-box-arrow-in-right"></i> Allocate Asset
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- FORM BLOCK -->
+      <form id="allotmentForm" class="needs-validation" novalidate>
+        <div class="modal-body" id="allocationFormBody">
+          <div class="row g-2"> <!-- Reduced gap -->
+            <div class="col-md-12">
+              <div class="fw-semibold">Item: <span id="modalItemDescription"></span></div>
+              <small class="text-muted">Tag will be generated after allocation.</small>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Employee Name</label>
+              <input type="text" name="empname" id="empname" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">SAP ID</label>
+              <input type="text" name="sapid" id="sapid" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Designation</label>
+              <input type="text" name="designation" id="designation" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Department</label>
+              <input type="text" name="department" id="department" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input type="text" name="phone" id="phone" class="form-control">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Building</label>
+              <input type="text" name="building" id="building" class="form-control">
+            </div>
+
+            <!-- hidden fields -->
+            <input type="hidden" id="modal_li_id" name="li_id">
+            <input type="hidden" id="inp_material_code" name="material_code">
+            <input type="hidden" id="inp_po_no" name="po_no">
+          </div>
+        </div>
+
+        <div class="modal-footer" id="allocationFormFooter">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button id="allotSubmitBtn" type="submit" class="btn btn-primary">Allocate Asset</button>
+        </div>
+      </form>
+
+      <!-- SUCCESS PANEL -->
+      <div id="allocationSuccessPanel" class="text-center py-4 d-none fade-in"> <!-- Reduced padding -->
+        <div class="checkmark mx-auto mb-2"></div> <!-- Reduced margin -->
+        <div class="h5 text-success fw-bold mb-2">Asset Allocated!</div> <!-- Reduced size -->
+        <div class="fs-6 mb-3"> <!-- Reduced size -->
+          <strong>User:</strong> <span id="succUser"></span><br>
+          <strong>Department:</strong> <span id="succDept"></span><br>
+          <strong>Tag:</strong> <span id="succTag" class="text-primary fw-bold"></span>
+        </div>
+        <button class="btn btn-success px-3" id="successOkBtn">OK</button> <!-- Reduced padding -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Line Item Modal -->
+<div class="modal fade" id="editLineItemModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil-square"></i> Edit Line Item
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="editLineItemForm" novalidate class="needs-validation">
+        <div class="modal-body">
+          <input type="hidden" id="edit_li_id">
+          <div class="mb-2"> <!-- Reduced margin -->
+            <label class="form-label">Material Code</label>
+            <input id="edit_material_code" class="form-control" required>
+          </div>
+          <div class="mb-2"> <!-- Reduced margin -->
+            <label class="form-label">Description</label>
+            <input id="edit_material_description" class="form-control" required>
+          </div>
+          <div class="mb-2"> <!-- Reduced margin -->
+            <label class="form-label">Quantity</label>
+            <input id="edit_qty" type="number" min="0" class="form-control" required>
+          </div>
+          <div class="mb-2"> <!-- Reduced margin -->
+            <label class="form-label">Value</label>
+            <input id="edit_value" class="form-control" required>
+          </div>
+          <div class="mb-2"> <!-- Reduced margin -->
+            <label class="form-label">Specifications</label>
+            <textarea id="edit_specs" class="form-control" rows="2"></textarea> <!-- Reduced rows -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- loader overlay -->
+<div class="loader-overlay" id="loader">
+  <div class="spinner"></div>
+</div>
+
+<!-- toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+(function () {
+  /* -------------------------------------------------------
+     ELEMENTS & GLOBAL STATE
+  --------------------------------------------------------*/
+  const loader = document.getElementById('loader');
+  const yearSelect = document.getElementById('yearselect');
+  const masterDiv = document.getElementById('MasterAssetAcquisition');
+  const lineCard = document.getElementById('lineItemsCard');
+  const displayPONo = document.getElementById('displayPONo');
+  const lineTableEl = document.getElementById('Table_AcquLineItems');
+
+  let masterTable = null;
+  let lineTable = null;
+
+  /* -------------------------------------------------------
+     UTILITIES
+  --------------------------------------------------------*/
+  function showLoader() { loader.classList.add('show'); }
+  function hideLoader() { loader.classList.remove('show'); }
+
+  function showToast(message, type = 'success', delay = 3500) {
+    const id = 't' + Math.random().toString(36).slice(2, 9);
+    const toast = document.createElement('div');
+
+    toast.className = `toast align-items-center text-bg-${type} border-0`;
+    toast.setAttribute('role', 'alert');
+    toast.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body">${message}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    `;
+
+    document.getElementById('toastContainer').appendChild(toast);
+
+    const bsToast = new bootstrap.Toast(toast, { delay });
+    bsToast.show();
+
+    toast.addEventListener('hidden.bs.toast', () => toast.remove());
+  }
+
+  /* -------------------------------------------------------
+     THEME TOGGLE
+  --------------------------------------------------------*/
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+  }
+
+  function updateThemeIcon(theme) {
+    const themeIcon = document.querySelector('#themeToggle i');
+    themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+  }
+
+  /* -------------------------------------------------------
+     INITIALIZE MASTER TABLE
+  --------------------------------------------------------*/
+  function initMasterTable(data = []) {
+    if (masterTable) {
+      masterTable.replaceData(data);
+      return;
+    }
+
+    masterTable = new Tabulator(masterDiv, {
+      layout: "fitColumns",
+      data,
+      pagination: "local",
+      paginationSize: 8, // Increased from 6 to show more records
+      placeholder: "<div class='text-center p-2 text-muted'>No acquisitions found.</div>", // Reduced padding
+      columns: [
+        { 
+          title: "Aq Id", 
+          field: "id", 
+          width: 80, // Reduced from 90
+          hozAlign: "center",
+          headerSort: true
+        },
+        { 
+          title: "PO number", 
+          field: "PO_NO", 
+          width: 130, // Reduced from 140
+          headerSort: true
+        },
+        { 
+          title: "PO date", 
+          field: "PO_Date", 
+          width: 110, // Reduced from 120
+          headerSort: true,
+          formatter: function(cell) {
+            const value = cell.getValue();
+            return value ? new Date(value).toLocaleDateString() : 'N/A';
+          }
+        },
+        { 
+          title: "Vendor", 
+          field: "vendorName", 
+          widthGrow: 2,
+          headerSort: true
+        },
+        { 
+          title: "Quantity", 
+          field: "Quantity", 
+          hozAlign: "center", 
+          width: 100, // Reduced from 110
+          headerSort: true
+        },
+        { 
+          title: "Value", 
+          field: "Value", 
+          hozAlign: "center", 
+          width: 110, // Reduced from 120
+          headerSort: true,
+          formatter: function(cell) {
+            const value = cell.getValue();
+            return value ? '₹' + Number(value).toLocaleString() : 'N/A';
+          }
+        },
+        {
+          title: "Actions",
+          width: 120, // Reduced from 160
+          hozAlign: "center",
+          formatter: function(cell) {
+            const row = cell.getRow();
+            const data = row.getData();
+            return `
+              <button class="btn btn-sm btn-primary view-items-btn"
+                data-aq-id="${data.id}"
+                data-po-no="${data.PO_NO}">
+                <i class="bi bi-eye"></i> View
+              </button>
+            `;
+          }
+        }
+      ]
+    });
+  }
+
+  /* -------------------------------------------------------
+     INITIALIZE LINE TABLE
+  --------------------------------------------------------*/
+  function initLineTable() {
+    if (lineTable) return;
+
+    lineTable = new Tabulator(lineTableEl, {
+      layout: "fitDataStretch",
+      pagination: "local",
+      paginationSize: 8, // Increased from 6 to show more records
+      data: [],
+      columns: [
+        { title: "li_id", field: "li_id", visible: false },
+        { title: "PO", field: "aq_po_no", visible: false },
+        { title: "Asset Type", field: "li_type", width: 100 }, // Reduced from 120
+        { title: "Material Code", field: "li_material_code", width: 130 }, // Reduced from 150
+        { title: "Description", field: "li_material_description", widthGrow: 2 },
+        { title: "Specs", field: "li_asset_specs", width: 180 }, // Reduced from 200
+        { title: "Value", field: "li_po_value", width: 100, hozAlign: "center", // Reduced from 110
+          formatter: function(cell) {
+            const value = cell.getValue();
+            return value ? '₹' + Number(value).toLocaleString() : 'N/A';
+          }
+        },
+        { title: "Quantity", field: "li_qty", width: 90, hozAlign: "center" }, // Reduced from 100
+        { title: "Allocated", field: "li_allocated_qty", width: 90, hozAlign: "center" }, // Reduced from 100
+        { title: "Remaining", field: "li_available_qty", width: 90, hozAlign: "center" }, // Reduced from 100
+        {
+          title: "Actions",
+          width: 180, // Reduced from 230
+          formatter: function (cell) {
+            const row = cell.getRow();
+            const data = row.getData();
+            const canAllot = data.li_available_qty > 0;
+
+            return `
+              <button class="btn btn-sm btn-warning edit-row-btn"
+                data-li_id="${data.li_id}">
+                <i class="bi bi-pencil-square"></i> Edit
+              </button>
+
+              <button class="btn btn-sm btn-success allot-btn ${canAllot ? "" : "disabled"}"
+                data-li_id="${data.li_id}"
+                data-desc="${encodeURIComponent(data.li_material_description)}"
+                data-mat="${data.li_material_code}"
+                data-po="${data.aq_po_no}">
+                <i class="bi bi-box-arrow-in-right"></i> Allot
+              </button>
+            `;
+          }
+        }
+      ]
+    });
+  }
+
+  /* -------------------------------------------------------
+     FETCH MASTER DATA
+  --------------------------------------------------------*/
+  async function fetchMasterData(year) {
+    try {
+      showLoader();
+      const res = await fetch(`/ams/api/acquisition/list`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ year })
+      });
+      const json = await res.json();
+
+      initMasterTable(json.data || []);
+      hideLoader();
+    } catch (err) {
+      hideLoader();
+      showToast("Failed to load acquisitions", "danger");
+    }
+  }
+
+  /* -------------------------------------------------------
+     SHOW LINE ITEMS
+  --------------------------------------------------------*/
+  function showLineItemsFor(aqId, poNo) {
+    const d = masterTable.getData().find(x => x.id === aqId);
+    if (!d) return showToast("Acquisition data missing", "danger");
+
+    displayPONo.textContent = poNo;
+
+    initLineTable();
+    lineTable.replaceData(d._children || []);
+
+    lineCard.style.display = "block";
+    window.scrollTo({ top: lineCard.offsetTop - 20, behavior: 'smooth' });
+  }
+
+  /* -------------------------------------------------------
+     EVENT HANDLERS FOR BUTTONS
+  --------------------------------------------------------*/
+  document.addEventListener("click", function (e) {
+    if (e.target.id === 'hideLineItems') {
+      lineCard.style.display = "none";
+    }
+
+    /* VIEW ITEMS */
+    const viewBtn = e.target.closest(".view-items-btn");
+    if (viewBtn) {
+      showLineItemsFor(
+        parseInt(viewBtn.dataset.aqId, 10),
+        viewBtn.dataset.poNo
+      );
+    }
+
+    /* EDIT ITEM */
+    const editBtn = e.target.closest(".edit-row-btn");
+    if (editBtn) {
+      const li_id = editBtn.dataset.li_id;
+      const row = lineTable.getRows().find(r => r.getData().li_id == li_id);
+      if (!row) return;
+
+      const d = row.getData();
+
+      document.getElementById("edit_li_id").value = d.li_id;
+      document.getElementById("edit_material_code").value = d.li_material_code;
+      document.getElementById("edit_material_description").value = d.li_material_description;
+      document.getElementById("edit_qty").value = d.li_qty;
+      document.getElementById("edit_value").value = d.li_po_value;
+      document.getElementById("edit_specs").value = d.li_asset_specs || "";
+
+      new bootstrap.Modal(document.getElementById("editLineItemModal")).show();
+    }
+
+    /* ALLOT ITEM */
+    const allotBtn = e.target.closest(".allot-btn");
+    if (allotBtn && !allotBtn.classList.contains("disabled")) {
+      document.getElementById("modalItemDescription").textContent =
+        decodeURIComponent(allotBtn.dataset.desc);
+
+      document.getElementById("modal_li_id").value = allotBtn.dataset.li_id;
+      document.getElementById("inp_material_code").value = allotBtn.dataset.mat;
+      document.getElementById("inp_po_no").value = allotBtn.dataset.po;
+
+      document.getElementById("allotmentForm").reset();
+      document.getElementById("allocationSuccessPanel").classList.add("d-none");
+
+      new bootstrap.Modal(document.getElementById("allotAssetModal")).show();
+    }
+  });
+
+  /* -------------------------------------------------------
+     SUBMIT EDIT LINE ITEM
+  --------------------------------------------------------*/
+  document.getElementById("editLineItemForm").addEventListener("submit", async function (ev) {
+    ev.preventDefault();
+
+    const payload = {
+      li_id: document.getElementById("edit_li_id").value,
+      li_material_code: document.getElementById("edit_material_code").value,
+      li_material_description: document.getElementById("edit_material_description").value,
+      li_qty: parseInt(document.getElementById("edit_qty").value, 10),
+      li_po_value: document.getElementById("edit_value").value,
+      li_asset_specs: document.getElementById("edit_specs").value
+    };
+
+    showLoader();
+
+    const res = await fetch("/ams/asset/update/lineItem", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+
+    hideLoader();
+
+    if (json.success) {
+      showToast("Line item updated", "success");
+
+      const row = lineTable.getRows().find(r => r.getData().li_id == payload.li_id);
+      if (row) row.update(payload);
+
+      bootstrap.Modal.getInstance(document.getElementById("editLineItemModal")).hide();
+    } else {
+      showToast("Update failed", "danger");
+    }
+  });
+
+  /* -------------------------------------------------------
+     SUBMIT ALLOT FORM
+  --------------------------------------------------------*/
+  document.getElementById("allotmentForm").addEventListener("submit", async function (ev) {
+    ev.preventDefault();
+
+    const form = ev.target;
+    const fd = new FormData(form);
+
+    showLoader();
+
+    const res = await fetch("/ams/asset/allocate", {
+      method: "POST",
+      body: fd
+    });
+
+    const json = await res.json();
+    hideLoader();
+
+    if (!json.success) {
+      showToast(json.message || "Allocation failed", "danger");
+      return;
+    }
+
+    /* SUCCESS UI */
+    document.getElementById("succUser").textContent = fd.get("empname");
+    document.getElementById("succDept").textContent = fd.get("department");
+    document.getElementById("succTag").textContent = json.tag;
+
+    document.getElementById("allocationFormBody").classList.add("d-none");
+    document.getElementById("allocationFormFooter").classList.add("d-none");
+    document.getElementById("allocationSuccessPanel").classList.remove("d-none");
+
+    /* Update table row */
+    const li_id = fd.get("li_id");
+    const row = lineTable.getRows().find(r => r.getData().li_id == li_id);
+    if (row) {
+      const d = row.getData();
+      row.update({
+        li_allocated_qty: d.li_allocated_qty + 1,
+        li_available_qty: d.li_available_qty - 1
+      });
+    }
+  });
+
+  /* -------------------------------------------------------
+     OK BUTTON (SUCCESS PANEL)
+  --------------------------------------------------------*/
+  document.getElementById("successOkBtn").addEventListener("click", () => {
+    bootstrap.Modal.getInstance(document.getElementById("allotAssetModal")).hide();
+  });
+
+  /* -------------------------------------------------------
+     RESET MODAL ON CLOSE
+  --------------------------------------------------------*/
+  document.getElementById("allotAssetModal").addEventListener("hidden.bs.modal", () => {
+    document.getElementById("allotmentForm").reset();
+    document.getElementById("allotmentForm").classList.remove("was-validated");
+
+    document.getElementById("allocationFormBody").classList.remove("d-none");
+    document.getElementById("allocationFormFooter").classList.remove("d-none");
+
+    document.getElementById("allocationSuccessPanel").classList.add("d-none");
+  });
+
+  /* -------------------------------------------------------
+     PAGE INITIALIZATION
+  --------------------------------------------------------*/
+  document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+    
+    initMasterTable([]);
+    initLineTable();
+
+    const initialYear = yearSelect.value;
+    fetchMasterData(initialYear);
+
+    yearSelect.addEventListener("change", () => fetchMasterData(yearSelect.value));
+    document.getElementById("refreshBtn").addEventListener("click", () => fetchMasterData(yearSelect.value));
+  });
+})();
+</script>
+
+<%- include('../../partials/footer') %>

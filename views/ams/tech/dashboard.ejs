@@ -1,0 +1,976 @@
+<%- include('../../partials/header', { title: "Technician Dashboard" }) %>
+
+<style>
+:root {
+  /* Enhanced color palette */
+  --primary: #1e293b;
+  --primary-light: #334155;
+  --secondary: #475569;
+  --muted: #64748b;
+  --accent: #0ea5e9;
+  --accent-dark: #0284c7;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg: #f1f5f9;
+  --bg-secondary: #e2e8f0;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05);
+  --radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark mode support */
+[data-theme="dark"] {
+  --primary: #f1f5f9;
+  --primary-light: #e2e8f0;
+  --secondary: #cbd5e1;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --accent-dark: #0ea5e9;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --bg: #0f172a;
+  --bg-secondary: #1e293b;
+  --card: #1e293b;
+  --border: #334155;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.3), 0 4px 6px rgba(0,0,0,0.2);
+}
+
+body { 
+  background: var(--bg); 
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--primary);
+  transition: var(--transition);
+}
+
+/* Page Layout */
+.page-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  min-height: 100vh;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--primary);
+}
+
+.page-title i {
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.theme-toggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--muted);
+}
+
+.theme-toggle:hover {
+  background: var(--accent);
+  color: white;
+  transform: rotate(180deg);
+}
+
+.refresh-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.refresh-btn:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.refresh-btn.spinning i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Stats Section */
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  border-left: 4px solid transparent;
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.stat-card.assigned { border-left-color: var(--accent); }
+.stat-card.in-repair { border-left-color: var(--warning); }
+.stat-card.waiting { border-left-color: #f59e0b; }
+.stat-card.resolved { border-left-color: var(--success); }
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: white;
+  margin-bottom: 0.75rem;
+}
+
+.stat-icon.assigned { background: var(--accent); }
+.stat-icon.in-repair { background: var(--warning); }
+.stat-icon.waiting { background: #f59e0b; }
+.stat-icon.resolved { background: var(--success); }
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.filter-tab {
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--muted);
+  transition: var(--transition);
+  position: relative;
+}
+
+.filter-tab:hover {
+  color: var(--primary);
+}
+
+.filter-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.filter-tab .badge {
+  margin-left: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  background: rgba(14, 165, 233, 0.1);
+  color: var(--accent);
+}
+
+/* Ticket Cards */
+.tickets-container {
+  margin-top: 1.5rem;
+}
+
+.ticket-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--accent);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.ticket-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.3), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.ticket-card:hover::before {
+  transform: translateX(100%);
+}
+
+.ticket-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.ticket-card.assigned { border-left-color: var(--accent); }
+.ticket-card.in-repair { border-left-color: var(--warning); }
+.ticket-card.waiting { border-left-color: #f59e0b; }
+.ticket-card.resolved { border-left-color: var(--success); }
+
+/* Ticket Head */
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+/* Ticket Title & Info */
+.ticket-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ticket-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
+
+.ticket-info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.ticket-info-item i {
+  color: var(--accent);
+  font-size: 0.75rem;
+}
+
+.ticket-info-item strong {
+  color: var(--secondary);
+}
+
+/* Status Badges */
+.badge {
+  padding: 0.375rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-assigned { 
+  background: rgba(14, 165, 233, 0.1); 
+  color: var(--accent); 
+}
+
+.badge-inrepair { 
+  background: rgba(245, 158, 11, 0.1); 
+  color: var(--warning); 
+}
+
+.badge-waiting { 
+  background: rgba(245, 158, 11, 0.1); 
+  color: #92400e; 
+}
+
+.badge-resolved { 
+  background: rgba(34, 197, 94, 0.1); 
+  color: var(--success); 
+}
+
+/* Buttons */
+.action-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-start { 
+  background: var(--accent); 
+  color: white;
+}
+
+.btn-start:hover {
+  background: var(--accent-dark);
+}
+
+.btn-wait { 
+  background: var(--warning); 
+  color: white;
+}
+
+.btn-wait:hover {
+  background: #d97706;
+}
+
+.btn-resolve { 
+  background: var(--success); 
+  color: white;
+}
+
+.btn-resolve:hover {
+  background: #16a34a;
+}
+
+/* Actions row */
+.ticket-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--muted);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--border);
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--secondary);
+}
+
+/* Loader Overlay */
+.loader {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(2px);
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+
+.loader.show {
+  display: flex;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--border);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s linear infinite;
+}
+
+/* Modal improvements */
+.modal-content {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  background: var(--card);
+  color: var(--primary);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem;
+}
+
+.modal-title {
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-title i {
+  color: var(--accent);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.form-control {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.625rem 0.875rem;
+  transition: var(--transition);
+  background: var(--card);
+  color: var(--primary);
+}
+
+.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+  outline: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .page-wrap {
+    padding: 1rem;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .stats-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .ticket-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-tabs {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  
+  .ticket-actions {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+</style>
+
+<div class="loader" id="loader">
+  <div class="spinner"></div>
+</div>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1 class="page-title">
+      <i class="bi bi-wrench-adjustable-circle"></i> Technician Dashboard
+    </h1>
+    <div class="header-actions">
+      <button class="refresh-btn" id="refreshBtn">
+        <i class="bi bi-arrow-clockwise"></i> Refresh
+      </button>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <i class="bi bi-moon-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Section -->
+  <div class="stats-section">
+    <div class="stat-card assigned">
+      <div class="stat-icon assigned">
+        <i class="bi bi-person-check"></i>
+      </div>
+      <div class="stat-label">Assigned</div>
+      <div class="stat-value" id="assignedCount">0</div>
+    </div>
+    <div class="stat-card in-repair">
+      <div class="stat-icon in-repair">
+        <i class="bi bi-tools"></i>
+      </div>
+      <div class="stat-label">In Repair</div>
+      <div class="stat-value" id="inRepairCount">0</div>
+    </div>
+    <div class="stat-card waiting">
+      <div class="stat-icon waiting">
+        <i class="bi bi-clock"></i>
+      </div>
+      <div class="stat-label">Waiting for Part</div>
+      <div class="stat-value" id="waitingCount">0</div>
+    </div>
+    <div class="stat-card resolved">
+      <div class="stat-icon resolved">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div class="stat-label">Resolved</div>
+      <div class="stat-value" id="resolvedCount">0</div>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-filter="all">
+      All <span class="badge" id="allCount">0</span>
+    </button>
+    <button class="filter-tab" data-filter="Assigned">
+      Assigned <span class="badge" id="assignedTabCount">0</span>
+    </button>
+    <button class="filter-tab" data-filter="InRepair">
+      In Repair <span class="badge" id="inRepairTabCount">0</span>
+    </button>
+    <button class="filter-tab" data-filter="WaitingForPart">
+      Waiting <span class="badge" id="waitingTabCount">0</span>
+    </button>
+    <button class="filter-tab" data-filter="Resolved">
+      Resolved <span class="badge" id="resolvedTabCount">0</span>
+    </button>
+  </div>
+
+  <!-- Tickets Container -->
+  <div id="ticketsContainer" class="tickets-container">
+    <div class="empty-state">
+      <i class="bi bi-inbox"></i>
+      <h3>Loading assigned issues...</h3>
+      <p>Please wait while we fetch your tickets.</p>
+    </div>
+  </div>
+</div>
+
+<!-- RESOLUTION MODAL -->
+<div class="modal fade" id="resolveModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-check-circle"></i> Resolve Issue
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="resolveIssueId">
+
+        <div class="mb-3">
+          <label class="form-label">Resolution Summary</label>
+          <textarea id="resolveNote" class="form-control" rows="4" placeholder="Describe how you fixed the issue..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-success" onclick="submitResolution()">
+          <i class="bi bi-check-circle"></i> Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let issues = [];
+let currentFilter = 'all';
+
+// Loader toggle
+function showLoader(){ 
+  document.getElementById('loader').classList.add('show'); 
+}
+
+function hideLoader(){ 
+  document.getElementById('loader').classList.remove('show'); 
+}
+
+// Initialize theme
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+}
+
+function updateThemeIcon(theme) {
+  const themeIcon = document.querySelector('#themeToggle i');
+  themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+}
+
+// Fetch assigned issues
+async function loadIssues() {
+  showLoader();
+  
+  try {
+    const res = await fetch('/ams/api/tech/issues');
+    const j = await res.json();
+    issues = j.data || [];
+    updateStats();
+    renderTickets();
+  } catch (error) {
+    console.error('Error loading issues:', error);
+    renderErrorState();
+  } finally {
+    hideLoader();
+  }
+}
+
+// Update statistics
+function updateStats() {
+  const counts = {
+    all: issues.length,
+    Assigned: issues.filter(i => i.status === 'Assigned').length,
+    InRepair: issues.filter(i => i.status === 'InRepair').length,
+    WaitingForPart: issues.filter(i => i.status === 'WaitingForPart').length,
+    Resolved: issues.filter(i => i.status === 'Resolved').length
+  };
+
+  // Update stat cards
+  document.getElementById('assignedCount').textContent = counts.Assigned;
+  document.getElementById('inRepairCount').textContent = counts.InRepair;
+  document.getElementById('waitingCount').textContent = counts.WaitingForPart;
+  document.getElementById('resolvedCount').textContent = counts.Resolved;
+
+  // Update filter tabs
+  document.getElementById('allCount').textContent = counts.all;
+  document.getElementById('assignedTabCount').textContent = counts.Assigned;
+  document.getElementById('inRepairTabCount').textContent = counts.InRepair;
+  document.getElementById('waitingTabCount').textContent = counts.WaitingForPart;
+  document.getElementById('resolvedTabCount').textContent = counts.Resolved;
+}
+
+// Render error state
+function renderErrorState() {
+  const box = document.getElementById('ticketsContainer');
+  box.innerHTML = `
+    <div class="empty-state">
+      <i class="bi bi-exclamation-triangle"></i>
+      <h3>Error Loading Issues</h3>
+      <p>There was a problem loading your assigned issues. Please try again.</p>
+      <button class="action-btn btn-start" onclick="loadIssues()">
+        <i class="bi bi-arrow-clockwise"></i> Try Again
+      </button>
+    </div>
+  `;
+}
+
+// Render clean cards
+function renderTickets() {
+  const box = document.getElementById('ticketsContainer');
+  
+  // Filter issues based on current filter
+  const filteredIssues = currentFilter === 'all' 
+    ? issues 
+    : issues.filter(i => i.status === currentFilter);
+
+  if (!filteredIssues.length) {
+    box.innerHTML = `
+      <div class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>No ${currentFilter === 'all' ? '' : currentFilter} Tickets</h3>
+        <p>${currentFilter === 'all' 
+          ? "You don't have any assigned tickets." 
+          : `You don't have any ${currentFilter.replace(/([A-Z])/g, ' $1').toLowerCase()} tickets.`}</p>
+      </div>
+    `;
+    return;
+  }
+
+  let html = "";
+
+  filteredIssues.forEach(t => {
+    html += `
+      <div class="ticket-card ${t.status.toLowerCase().replace('waitingforpart', 'waiting')}">
+        <div class="ticket-header">
+          <div>
+            <div class="ticket-title">
+              <i class="bi bi-ticket-perforated"></i>
+              Ticket #${t.issue_id}
+            </div>
+            <div class="ticket-info">
+              <div class="ticket-info-item">
+                <i class="bi bi-tag"></i>
+                <strong>Tag:</strong> ${t.tag}
+              </div>
+              <div class="ticket-info-item">
+                <i class="bi bi-folder"></i>
+                <strong>Category:</strong> ${t.category}
+              </div>
+              <div class="ticket-info-item">
+                <i class="bi bi-card-text"></i>
+                <strong>Description:</strong> ${t.description}
+              </div>
+            </div>
+          </div>
+          <div>${badge(t.status)}</div>
+        </div>
+        <div class="ticket-actions">
+          ${actions(t)}
+        </div>
+      </div>
+    `;
+  });
+
+  box.innerHTML = html;
+  
+  // Add fade-in animation to cards
+  setTimeout(() => {
+    document.querySelectorAll('.ticket-card').forEach((card, index) => {
+      setTimeout(() => {
+        card.classList.add('fade-in');
+      }, index * 50);
+    });
+  }, 10);
+}
+
+// Status badge component
+function badge(s) {
+  const badges = {
+    Assigned: `<span class="badge badge-assigned"><i class="bi bi-person-check"></i> Assigned</span>`,
+    InRepair: `<span class="badge badge-inrepair"><i class="bi bi-tools"></i> In Repair</span>`,
+    WaitingForPart: `<span class="badge badge-waiting"><i class="bi bi-clock"></i> Waiting for Part</span>`,
+    Resolved: `<span class="badge badge-resolved"><i class="bi bi-check-circle"></i> Resolved</span>`
+  };
+  
+  return badges[s] || `<span class="badge">${s}</span>`;
+}
+
+// Show actions depending on status
+function actions(t) {
+  if (t.status === "Assigned")
+    return `<button class="action-btn btn-start" onclick="markInRepair(${t.issue_id})">
+      <i class="bi bi-play-circle"></i> Start Repair
+    </button>`;
+
+  if (t.status === "InRepair")
+    return `
+      <button class="action-btn btn-wait" onclick="markWaiting(${t.issue_id})">
+        <i class="bi bi-clock"></i> Waiting for Part
+      </button>
+      <button class="action-btn btn-resolve" onclick="openResolve(${t.issue_id})">
+        <i class="bi bi-check-circle"></i> Resolve
+      </button>
+    `;
+
+  if (t.status === "WaitingForPart")
+    return `<button class="action-btn btn-resolve" onclick="openResolve(${t.issue_id})">
+      <i class="bi bi-check-circle"></i> Resolve
+    </button>`;
+
+  return "";
+}
+
+// Update: Start Repair
+async function markInRepair(id) {
+  showLoader();
+  
+  try {
+    const res = await fetch('/ams/api/tech/issues/update',{
+      method:'POST', 
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ issue_id:id, status:"InRepair" })
+    });
+    
+    const j = await res.json();
+    
+    if (j.success) {
+      await loadIssues();
+    } else {
+      alert(j.message || 'Failed to start repair');
+    }
+  } catch (error) {
+    console.error('Error marking in repair:', error);
+    alert('An error occurred while starting repair');
+  } finally {
+    hideLoader();
+  }
+}
+
+// Update: Waiting for Part
+async function markWaiting(id) {
+  showLoader();
+  
+  try {
+    const res = await fetch('/ams/api/tech/issues/update',{
+      method:'POST', 
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ issue_id:id, status:"WaitingForPart" })
+    });
+    
+    const j = await res.json();
+    
+    if (j.success) {
+      await loadIssues();
+    } else {
+      alert(j.message || 'Failed to update status');
+    }
+  } catch (error) {
+    console.error('Error marking waiting:', error);
+    alert('An error occurred while updating status');
+  } finally {
+    hideLoader();
+  }
+}
+
+// Resolution modal
+function openResolve(id){
+  document.getElementById("resolveIssueId").value = id;
+  document.getElementById("resolveNote").value = '';
+  new bootstrap.Modal(document.getElementById("resolveModal")).show();
+}
+
+// Submit resolution
+async function submitResolution() {
+  const id = document.getElementById("resolveIssueId").value;
+  const note = document.getElementById("resolveNote").value;
+
+  if (!note.trim()) return alert("Please enter resolution summary");
+
+  showLoader();
+  
+  try {
+    const res = await fetch('/ams/api/tech/issues/resolve',{
+      method:'POST', 
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ issue_id:id, resolution:note })
+    });
+    
+    const j = await res.json();
+    
+    if (j.success) {
+      bootstrap.Modal.getInstance(document.getElementById("resolveModal")).hide();
+      await loadIssues();
+    } else {
+      alert(j.message || 'Failed to resolve issue');
+    }
+  } catch (error) {
+    console.error('Error resolving issue:', error);
+    alert('An error occurred while resolving the issue');
+  } finally {
+    hideLoader();
+  }
+}
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  loadIssues();
+  
+  // Event listeners
+  document.getElementById('refreshBtn').addEventListener('click', () => {
+    const btn = document.getElementById('refreshBtn');
+    btn.classList.add('spinning');
+    loadIssues().finally(() => {
+      btn.classList.remove('spinning');
+    });
+  });
+  
+  // Theme toggle
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+  });
+  
+  // Filter tabs
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentFilter = tab.getAttribute('data-filter');
+      renderTickets();
+    });
+  });
+});
+</script>
+
+<%- include('../../partials/footer') %>

@@ -1,0 +1,52 @@
+<%- include('../partials/header') %>
+   
+<div class="container d-flex justify-content-center align-items-center">
+<div class="card shadow">
+  <div class="card-body">
+    <form id="passwordChangeForm" action="/core/:sap_id/reset-password" method="POST">
+      <div class="form-group ">
+        <label class ="form-label" for="u_id">User ID</label>
+        <input class="form-control shadow" type="text" id="u_id" name="u_id" value="<%= user.id %>" readonly>
+      </div>
+      <div class="form-group ">
+        <label class ="form-label" for="oldPassword">Old Password</label>
+        <input class="form-control shadow" type="password" id="oldPassword" name="oldPassword" required>
+      </div>
+      <div class="form-group">
+        <label class ="form-label" for="newPassword">New Password</label>
+        <input class="form-control shadow" type="password" id="newPassword" name="newPassword" required>
+      </div>
+      <div class="form-group">
+        <label class ="form-label" for="confirmNewPassword">Confirm New Password</label>
+        <input class="form-control shadow" type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+      </div>
+      <button class="btn btn-primary form-control mt-4 mb-4" type="submit">Change Password</button>
+      <div id="errorMsg" class="error"></div>
+    </form>
+  </div>
+</div>
+
+
+</div>
+    <script>
+      document.getElementById('passwordChangeForm').onsubmit = function (event) {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+        const errorMsg = document.getElementById('errorMessage');
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{5,}$/;
+
+        if (newPassword !== confirmNewPassword) {
+          errorMsg.textContent = "New passwords do not match.";
+          event.preventDefault();
+        } else if (!passwordRegex.test(newPassword)) {
+          errorMsg.textContent = "Password must be at least 5 characters long and include 1 uppercase letter, 1 lowercase letter, and 1 special character.";
+          event.preventDefault();
+        } else {
+          errorMsg.textContent = "";
+        }
+      };
+    </script>
+
+
+    <%- include('../partials/footer') %>

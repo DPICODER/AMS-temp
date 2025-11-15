@@ -1,0 +1,942 @@
+<%- include('../../partials/header') %>
+<%- include('../../partials/customAlert') %>
+
+<style>
+    :root {
+        --primary: #5e72e4;
+        --secondary: #825ee4;
+        --success: #2dce89;
+        --danger: #f5365c;
+        --warning: #fb6340;
+        --info: #11cdef;
+        --light: #f8f9fe;
+        --dark: #212529;
+        --gray: #8898aa;
+        --gray-light: #f4f5f7;
+        --white: #ffffff;
+        --border-radius: 0.375rem;
+        --box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+        --transition: all 0.15s ease;
+    }
+
+    body {
+        background-color: #f4f5f7;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: #32325d;
+        line-height: 1.5;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        color: #32325d;
+    }
+
+    /* Page Header */
+    .page-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        color: #8898aa;
+        font-size: 1rem;
+    }
+
+    /* Card Styles */
+    .card {
+        border: 0;
+        border-radius: var(--border-radius);
+        box-shadow: 0 0 0.5rem 0 rgba(136, 152, 170, 0.15);
+        margin-bottom: 1.5rem;
+        transition: var(--transition);
+    }
+
+    .card-header {
+        background-color: transparent;
+        border-bottom: 1px solid #e9ecef;
+        padding: 1.25rem 1.5rem;
+        font-weight: 600;
+        color: #32325d;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Form Styles */
+    .form-control {
+        border: 1px solid #dee2e6;
+        border-radius: var(--border-radius);
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        transition: var(--transition);
+        background-color: #fff;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(94, 114, 228, 0.25);
+        outline: 0;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #525f7f;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Button Styles */
+    .btn {
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        font-size: 0.875rem;
+        padding: 0.625rem 1.25rem;
+        transition: var(--transition);
+        border: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn i {
+        font-size: 0.875rem;
+        margin-right: 0.5rem;
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        color: var(--white);
+    }
+
+    .btn-primary:hover {
+        background-color: #4c63d2;
+        transform: translateY(-1px);
+    }
+
+    .btn-success {
+        background-color: var(--success);
+        color: var(--white);
+    }
+
+    .btn-success:hover {
+        background-color: #26af74;
+        transform: translateY(-1px);
+    }
+
+    .btn-danger {
+        background-color: var(--danger);
+        color: var(--white);
+    }
+
+    .btn-danger:hover {
+        background-color: #ec0c38;
+        transform: translateY(-1px);
+    }
+
+    .btn-outline-secondary {
+        background-color: transparent;
+        color: #8898aa;
+        border: 1px solid #dee2e6;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f4f5f7;
+        color: #525f7f;
+    }
+
+    .btn-sm {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    /* Table Styles */
+    .tabulator {
+        border: 0;
+        background-color: transparent;
+    }
+
+    .tabulator .tabulator-header {
+        background-color: #f6f9fc;
+        border-bottom: 1px solid #e9ecef;
+        color: #8898aa;
+        font-weight: 600;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .tabulator .tabulator-header .tabulator-col {
+        border-right: 1px solid #e9ecef;
+        padding: 0.75rem 0.5rem;
+    }
+
+    .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
+        padding: 0;
+    }
+
+    .tabulator .tabulator-row {
+        border-bottom: 1px solid #e9ecef;
+        color: #525f7f;
+    }
+
+    .tabulator .tabulator-row:hover {
+        background-color: #f6f9fc;
+    }
+
+    .tabulator .tabulator-row .tabulator-cell {
+        padding: 0.75rem 0.5rem;
+        border-right: 1px solid #e9ecef;
+    }
+
+    /* Modal Styles */
+    .modal-content {
+        border: 0;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #e9ecef;
+        padding: 1.5rem;
+    }
+
+    .modal-title {
+        font-weight: 600;
+        color: #32325d;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #e9ecef;
+        padding: 1.5rem;
+    }
+
+    /* Alert Styles */
+    .alert {
+        border: 0;
+        border-radius: var(--border-radius);
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-info {
+        background-color: rgba(17, 205, 239, 0.1);
+        color: #0da5c0;
+    }
+
+    /* Badge Styles */
+    .badge {
+        font-weight: 600;
+        font-size: 0.625rem;
+        padding: 0.25rem 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Loading Spinner */
+    .spinner-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.85);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .spinner-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .spinner {
+        width: 3rem;
+        height: 3rem;
+        border: 0.25rem solid #e9ecef;
+        border-top: 0.25rem solid var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Toast Notifications */
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1050;
+    }
+
+    .toast {
+        border: 0;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 0.75rem;
+    }
+
+    /* Highlight new rows */
+    .highlight-new {
+        background-color: rgba(94, 114, 228, 0.05) !important;
+        animation: highlight 1.5s ease;
+    }
+
+    @keyframes highlight {
+        0% { background-color: rgba(94, 114, 228, 0.2); }
+        100% { background-color: rgba(94, 114, 228, 0.05); }
+    }
+
+    /* Utility Classes */
+    .text-muted {
+        color: #8898aa !important;
+    }
+
+    .d-flex {
+        display: flex;
+    }
+
+    .justify-content-between {
+        justify-content: space-between;
+    }
+
+    .align-items-center {
+        align-items: center;
+    }
+
+    .ms-auto {
+        margin-left: auto;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem;
+    }
+
+    .g-4 > * {
+        padding: 1.5rem;
+    }
+
+    .col-lg-4 {
+        flex: 0 0 auto;
+        width: 33.33333333%;
+    }
+
+    .col-lg-8 {
+        flex: 0 0 auto;
+        width: 66.66666667%;
+    }
+
+    .col-12 {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .h-100 {
+        height: 100% !important;
+    }
+
+    .p-0 {
+        padding: 0 !important;
+    }
+
+    /* Icon styles */
+    .bi {
+        vertical-align: -0.125em;
+    }
+</style>
+
+<!-- Loading Spinner -->
+<div class="spinner-overlay" id="loadingSpinner">
+    <div class="spinner"></div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container-fluid">
+    <form id="acquisition">
+        <div class="row g-4">
+            
+            <!-- LEFT SIDE: ACQUISITION HEADER -->
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <i class="bi bi-info-circle me-2"></i> Acquisition Details
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label" for="aq_po_no">PO Number</label>
+                            <input type="text" class="form-control numberOnly"
+                                   id="aq_po_no" name="aq_po_no"
+                                   maxlength="10" minlength="10" required pattern="[0-9]{10}"
+                                   placeholder="Enter 10-digit PO number">
+                            <div class="invalid-feedback">PO number must be 10 digits.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="aq_po_date">PO Date</label>
+                            <input type="date" class="form-control"
+                                   id="aq_po_date" name="aq_po_date"
+                                   value="<%= new Date().toISOString().split('T')[0] %>" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="aq_vendor_code">Vendor Code</label>
+                            <input type="text" class="form-control"
+                                   id="aq_vendor_code" name="aq_vendor_code"
+                                   minlength="7" maxlength="7" required>
+                            <div class="invalid-feedback">Vendor Code must be 7 characters.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="aq_vendor_name">Vendor Name</label>
+                            <input type="text" class="form-control"
+                                   id="aq_vendor_name" name="aq_vendor_name"
+                                   required>
+                            <div class="invalid-feedback">Vendor name cannot be empty.</div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-check-circle"></i> Submit Acquisition
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: TABULATOR TABLE -->
+            <div class="col-lg-8">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-list-ul me-2"></i> Line Items
+                            <span class="badge bg-light text-dark ms-2" id="itemCount">0</span>
+                        </div>
+                        <button type="button" id="addLineItemEntry" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Add Item
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="line_item_table" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- SPECS MODAL -->
+<div class="modal fade" id="requestDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-gear me-2"></i> Asset Specifications
+                </h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <div>Fill in the specifications for this asset type. You can also add custom specifications.</div>
+                </div>
+                <div id="specFieldsContainer"></div>
+                <button type="button" id="addCustomSpecBtn" class="btn btn-outline-secondary btn-sm mt-3">
+                    <i class="bi bi-plus-circle"></i> Add Custom Spec
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="saveSpecsBtn">
+                    <i class="bi bi-check-circle"></i> Save Specifications
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/ams/ams/js/formValidation.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* ---------------------------------------------------------
+       1. ASSET SPEC DEFINITIONS
+    --------------------------------------------------------- */
+    const assetSpecDefinitions = {
+        'PC':       ['Make','Model','Processor','RAM (GB)','Storage Type','Storage Size (GB)','Graphics Card'],
+        'Printer':  ['Make','Model','Print Speed (PPM)','Resolution (DPI)','Duplex','Connection Type'],
+        'Scanner':  ['Make','Model','Scan Speed (PPM)','Resolution (DPI)','ADF'],
+        'Monitor':  ['Make','Model','Size (Inches)','Resolution','Panel Type'],
+        'Spares':   ['Description'],
+        'Other':    ['Description']
+    };
+
+    /* ---------------------------------------------------------
+       2. TABULATOR COLUMNS
+    --------------------------------------------------------- */
+    const columnDefs = [
+        {
+            title: "Asset Type",
+            field: "asset_type",
+            editor: "list",
+            editorParams: {
+                values: ["PC","Printer","Scanner","Monitor","Spares","Other"]
+            },
+            formatter: (cell) => {
+                const value = cell.getValue();
+                if (!value) return "";
+                
+                let icon = "";
+                switch(value) {
+                    case "PC": icon = "bi-laptop"; break;
+                    case "Printer": icon = "bi-printer"; break;
+                    case "Scanner": icon = "bi-upc-scan"; break;
+                    case "Monitor": icon = "bi-display"; break;
+                    case "Spares": icon = "bi-tools"; break;
+                    case "Other": icon = "bi-box"; break;
+                }
+                
+                return `<i class="bi ${icon} me-1"></i> ${value}`;
+            }
+        },
+        {
+            title: "Material Code",
+            field: "material_code",
+            editor: "input",
+            // validator: "string",
+            editorParams: { elementAttributes: { maxLength: "10" } }
+        },
+        {
+            title: "Description",
+            field: "material_desc",
+            editor: "input"
+        },
+        {
+            title: "Quantity",
+            field: "quantity",
+            editor: "number",
+            editorParams: { min: 1 },
+            width: 100,
+            hozAlign: "center"
+        },
+        {
+            title: "Unit Price",
+            field: "unit_price",
+            editor: "number",
+            editorParams: { min: 0 },
+            width: 120,
+            hozAlign: "right",
+            formatter: (cell) => {
+                const value = cell.getValue();
+                return value ? `₹${parseFloat(value).toFixed(2)}` : "₹0.00";
+            }
+        },
+        {
+            title: "Total Price",
+            field: "total_price",
+            width: 120,
+            hozAlign: "right",
+            bottomCalc: "sum",
+            bottomCalcFormatter: (cell) => {
+                const value = cell.getValue();
+                return `₹${parseFloat(value).toFixed(2)}`;
+            },
+            formatter: (cell) => {
+                const value = cell.getValue();
+                return value ? `₹${parseFloat(value).toFixed(2)}` : "₹0.00";
+            }
+        },
+        {
+            title: "Specifications",
+            field: "specs",
+            formatter: (cell) => {
+                const v = cell.getValue();
+                if (!v) return "<span class='text-muted'>Click to add specs</span>";
+                
+                const specCount = Object.keys(v).length;
+                return `<span class="badge bg-primary">${specCount} Specs</span>`;
+            },
+            cellClick: (e, cell) => openSpecsModal(cell)
+        },
+        {
+            title: "Actions",
+            width: 80,
+            hozAlign: "center",
+            formatter: () => `<button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>`,
+            cellClick: (e, cell) => {
+                if (confirm("Are you sure you want to delete this item?")) {
+                    cell.getRow().delete();
+                    updateItemCount();
+                }
+            }
+        }
+    ];
+
+    /* ---------------------------------------------------------
+       3. INITIALIZE TABLE
+    --------------------------------------------------------- */
+    const table = new Tabulator("#line_item_table", {
+        data: [],
+        layout: "fitColumns",
+        pagination: "local",
+        paginationSize: 8,
+        responsiveLayout: "hide",
+        placeholder: "<div class='text-center p-4'><i class='bi bi-inbox display-1 text-muted'></i><p class='text-muted mt-2'>No line items yet. Click 'Add Item' to get started.</p></div>",
+        columns: columnDefs
+    });
+
+    /* ---------------------------------------------------------
+       4. UPDATE ITEM COUNT
+    --------------------------------------------------------- */
+    function updateItemCount() {
+        const count = table.getData().length;
+        document.getElementById("itemCount").textContent = count;
+    }
+
+    /* ---------------------------------------------------------
+       5. SHOW/HIDE LOADING SPINNER
+    --------------------------------------------------------- */
+    function showLoading() {
+        document.getElementById("loadingSpinner").classList.add("active");
+    }
+
+    function hideLoading() {
+        document.getElementById("loadingSpinner").classList.remove("active");
+    }
+
+    /* ---------------------------------------------------------
+       6. SHOW TOAST NOTIFICATION
+    --------------------------------------------------------- */
+    function showToast(message, type = "success") {
+        const toastContainer = document.getElementById("toastContainer");
+        const toastId = "toast_" + Date.now();
+        
+        const toastHtml = `
+            <div id="${toastId}" class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${type === "success" ? '<i class="bi bi-check-circle me-2"></i>' : '<i class="bi bi-exclamation-triangle me-2"></i>'}
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        `;
+        
+        toastContainer.insertAdjacentHTML("beforeend", toastHtml);
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 3000 });
+        toast.show();
+        
+        toastElement.addEventListener("hidden.bs.toast", () => {
+            toastElement.remove();
+        });
+    }
+
+    /* ---------------------------------------------------------
+       7. SPECS MODAL HANDLER
+    --------------------------------------------------------- */
+    let currentEditingRow = null;
+
+    function openSpecsModal(cell) {
+        currentEditingRow = cell.getRow();
+        const row = currentEditingRow.getData();
+        const type = row.asset_type || "Other";
+
+        const fields = assetSpecDefinitions[type] || assetSpecDefinitions["Other"];
+        const existing = row.specs || {};
+
+        const container = document.getElementById("specFieldsContainer");
+        container.innerHTML = "";
+
+        fields.forEach(spec => {
+            container.insertAdjacentHTML("beforeend", `
+                <div class="mb-3">
+                    <label class="form-label">${spec}</label>
+                    <input type="text" class="form-control" name="${spec}" value="${existing[spec] || ''}">
+                </div>
+            `);
+        });
+
+        // Add existing custom specs
+        if (existing && Object.keys(existing).length > 0) {
+            Object.keys(existing).forEach(key => {
+                if (!fields.includes(key)) {
+                    container.insertAdjacentHTML("beforeend", `
+                        <div class="mb-3">
+                            <label class="form-label">${key} <span class="badge bg-warning">Custom</span></label>
+                            <input type="text" class="form-control" name="${key}" value="${existing[key]}">
+                        </div>
+                    `);
+                }
+            });
+        }
+
+        new bootstrap.Modal(document.getElementById("requestDetailsModal")).show();
+    }
+
+    document.getElementById("addCustomSpecBtn").addEventListener("click", () => {
+        const name = prompt("Enter specification name:");
+        if (!name) return;
+
+        document.getElementById("specFieldsContainer").insertAdjacentHTML("beforeend", `
+            <div class="mb-3">
+                <label class="form-label">${name} <span class="badge bg-warning">Custom</span></label>
+                <input type="text" class="form-control" name="${name}">
+            </div>
+        `);
+    });
+
+    document.getElementById("saveSpecsBtn").addEventListener("click", () => {
+        if (!currentEditingRow) return;
+
+        const specs = {};
+        document.querySelectorAll("#specFieldsContainer input").forEach(i => {
+            if (i.value.trim() !== "") specs[i.name] = i.value.trim();
+        });
+
+        currentEditingRow.update({ specs });
+        showToast("Specifications saved successfully");
+        bootstrap.Modal.getInstance(document.getElementById("requestDetailsModal")).hide();
+    });
+
+    /* ---------------------------------------------------------
+       8. ADD ROW BUTTON
+    --------------------------------------------------------- */
+    document.getElementById("addLineItemEntry").addEventListener("click", () => {
+        table.addRow({
+            asset_type: "",
+            quantity: 1,
+            unit_price: 0,
+            total_price: 0
+        }).then(row => {
+            row.getElement().classList.add("highlight-new");
+            setTimeout(() => row.getElement().classList.remove("highlight-new"), 1200);
+            updateItemCount();
+        });
+    });
+
+    /* ---------------------------------------------------------
+       9. AUTO-CALCULATE TOTAL
+    --------------------------------------------------------- */
+    table.on("cellEdited", cell => {
+        const data = cell.getRow().getData();
+        if (["quantity", "unit_price"].includes(cell.getField())) {
+            cell.getRow().update({
+                total_price: (data.quantity || 0) * (data.unit_price || 0)
+            });
+        }
+    });
+
+    /* ---------------------------------------------------------
+       10. PO NUMBER BLUR VALIDATION
+    --------------------------------------------------------- */
+    document.getElementById("aq_po_no").addEventListener("blur", async () => {
+        const value = document.getElementById("aq_po_no").value;
+        if (value.length !== 10) return;
+
+        showLoading();
+        
+        try {
+            const resp = await fetch(`/ams/validate_po_number`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ po_number: value })
+            });
+
+            const data = await resp.json();
+            if (data.success && data.exists) {
+                showToast("PO already Exist's.", "danger");
+                document.getElementById("acquisition").reset();
+                // console.log("data:",data);
+                
+            }
+        } catch (error) {
+            showToast("Error validating PO number", "danger");
+        } finally {
+            hideLoading();
+        }
+    });
+
+                function isEmpty(obj) {
+                    return obj && Object.keys(obj).length === 0
+                }
+
+                function validatePurchaseOrder(data) {
+                 const errors = [];  
+
+                    // --- Top-level structure checks ---
+                    if (!data || typeof data !== 'object') {
+                        errors.push("Input must be a valid object.");
+                        return { isValid: false, errors };
+                    }
+                    if (!data.header || typeof data.header !== 'object') {
+                        errors.push("'header' is required and must be an object.");
+                    }
+                    if (!Array.isArray(data.items)) {
+                        errors.push("'items' is required and must be an array.");
+                    } else if (data.items.length === 0) {
+                        errors.push("At-least one Acquisition Line items to Be Entered.");
+                    }
+
+                    // --- Header validation ---
+                    if (data.header) {
+                        const h = data.header;
+                        if (typeof h.po_no !== 'string' && h.po_no.length < 10) {
+                            errors.push("po_no must be a 10 digits.");
+                        }
+                        if (typeof h.po_date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(h.po_date)) {
+                            errors.push("po_date must be in YYYY-MM-DD format.");
+                        }
+                        if (typeof h.vendor_name !== 'string' || h.vendor_name.trim() === '') {
+                            errors.push("vendor_name cannot be empty.");
+                        }
+                    }
+
+                    // --- Items array validation ---
+                    if (Array.isArray(data.items)) {
+                        data.items.forEach((item, index) => {
+                            if (typeof item !== 'object' || item === null) {
+                                errors.push(`At-least one Acquisition Line items to Be Entered.`);
+                                return; // Skip to next item
+                            }
+                            console.log("Asset Type :", item.asset_type, "type :", typeof (item.asset_type));
+
+                            if (item.asset_type == "Select Asset Type" || item.asset_type == undefined || item.asset_type == "" || item.asset_type == null) {
+                                errors.push(`[ Line-Item-${index} ] =>  Select a Asset Type.`);
+                            }
+                            if (typeof item.quantity !== 'number' || !Number.isInteger(item.quantity) || item.quantity <= 0) {
+                                errors.push(`[ Line-Item-${index} ] => Enter a valid Quantity.`);
+                            }
+                            if (typeof item.unit_price !== 'number' || item.unit_price <= 0) {
+                                errors.push(`[ Line-Item-${index} ] => Enter Unit Price.`);
+                            }
+                            if (typeof item.total_price !== 'number' || item.total_price <= 0) {
+                            }
+                            if (item.material_code == undefined || (typeof item.material_code == 'string') && (item.material_code.length < 10)) {
+                                errors.push(`[ Line-Item-${index} ] => Material Code must be 10 digits.`);
+                            }
+                            if (typeof item.material_desc !== 'string' || item.material_desc.trim() === '') {
+                                errors.push(`[ Line-Item-${index} ] => Material Description should not be empty.`);
+                            }
+                            console.log("IS Empty :", isEmpty(item.specs))
+                            if (item.specs == undefined || isEmpty(item.specs) || item.specs == null) {
+                                errors.push(`[ Line-Item-${index} ] => specs must be an Entered.`);
+                            }
+                        });
+                    }
+
+                    return {
+                        isValid: errors.length === 0,
+                        errors: errors
+                    };
+                }
+
+
+
+    /* ---------------------------------------------------------
+       11. FORM SUBMIT
+    --------------------------------------------------------- */
+    document.getElementById("acquisition").addEventListener("submit", async e => {
+        e.preventDefault();
+
+        if (!e.target.checkValidity()) {
+            e.target.classList.add("was-validated");
+            showToast("Please fill in all required fields correctly", "danger");
+            return;
+        }
+
+        const items = table.getData();
+        if (items.length === 0) {
+            showToast("Please add at least one line item", "warning");
+            return;
+        }
+
+        const header = {
+            po_no: document.getElementById("aq_po_no").value,
+            po_date: document.getElementById("aq_po_date").value,
+            vendor_code: document.getElementById("aq_vendor_code").value,
+            vendor_name: document.getElementById("aq_vendor_name").value
+        };
+
+        const payload = { header, items };
+
+        const isOk = validatePurchaseOrder(payload);
+
+        if(isOk.isValid){
+showLoading();
+        
+        try {
+            const response = await fetch("/ams/asset/acquisition/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                showToast("Acquisition submitted successfully", "success");
+                document.getElementById("acquisition").reset();
+                table.clearData();
+                updateItemCount();
+            } else {
+                showToast(data.message || "Failed to submit acquisition", "danger");
+            }
+        } catch (error) {
+            showToast("Error submitting acquisition", "danger");
+        } finally {
+            hideLoading();
+        }
+        }else{
+            let error_string = ""
+            isOk.errors.forEach(err => {
+                error_string += err + ".\n"
+            })
+            console.log("Error", error_string);
+            alert(error_string)
+            // showToast(error_string, "danger");
+
+            console.log("Error", isOk);
+        }
+
+        
+    });
+});
+</script>
+
+<%- include('../../partials/footer') %>

@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+
+    <h3>Update Profile</h3>
+    <form action="/user/myProfile" method="post">
+        <div class="form-group">
+            <label for="sap_id">SAP ID</label>
+            <input type="text" class="form-control" id="sap_id" name="sap_id" value="<%= user.sap_id %>" readonly>
+        </div>
+        <div class="form-group">
+            <label for="leg_id">Leg ID</label>
+            <input type="text" class="form-control" id="leg_id" name="leg_id" value="<%= user.leg_id %>" readonly>
+        </div>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" readonly>
+        </div>
+        <div class="form-group">
+            <label for="division">Division</label>
+            <input type="text" class="form-control" id="division" name="division" value="<%= user.division %>" readonly>
+        </div>
+        <div class="form-group">
+            <label for="department">Department</label>
+            <input type="text" class="form-control" id="department" name="department" value="<%= user.department %>"
+                readonly>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="text" class="form-control" id="dob" name="dob" value="<%= user.dob %>" readonly>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <input type="text" class="form-control" id="status" name="status" value="<%= user.status %>" readonly>
+        </div>
+        <div class="form-group">
+            <label for="phone_number">Phone Number</label>
+            <input type="text" class="form-control" id="phone_number" name="phone_number"
+                value="<%= user.phone_number %>">
+        </div>
+        <div class="form-group">
+            <label for="work_location">Work Location</label>
+            <input type="text" class="form-control" id="work_location" name="work_location"
+                value="<%= user.work_location %>">
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+
+
+    <%- include('../partials/footer') %>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/ams/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/ams/css/bootstrap-icons.css" />
+  </head>
+  <body style="background-color: #ECEFF1;">
+    <div
+      class="container d-flex justify-content-center align-items-center vh-100"
+    >
+      <div class="card shadow">
+        <div
+          class="card-body p-5 border border-danger border rounded text-center"
+        >
+          <div class="h1">
+            <%if(errorMessage && errorMessage.length > 0){%>
+                <i class="bi bi-exclamation-triangle text-danger"></i><br/><%=errorMessage%>
+            <%}else{%>
+                <i class="bi bi-exclamation-triangle"></i>Oop's.<br/>Something went wrong<br>Try again later>
+
+            <%}%>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/ams/js/bootstrap.min.js"></script>
+  </body>
+</html>

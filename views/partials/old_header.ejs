@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link href="/css/pista.css" rel="stylesheet">
+    <link href="/css/w3.css" rel="stylesheet">
+    <link href="/css/fontawesome.css" rel="stylesheet" />
+    <link href="/css/solid.css" rel="stylesheet" />
+    <link href="/css/menu.css" rel="stylesheet" />
+    <script src="/js/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // alert("Hi");
+            $("#closebtn").click(function () {
+                $("#mySidepanel").fadeToggle(200);
+            });
+            $("#closebtnD").click(function () {
+                $("#mySidepanel").fadeToggle(200);
+            });
+            $("#menubtn").click(function () {
+                $("#mySidepanel").fadeToggle(200);
+            });
+            
+        });
+        
+    </script>
+
+</head>
+
+<body>
+    <div class="content">
+        <button class="menubtn" id="menubtn"> &nbsp; ☰ &nbsp; Menu &nbsp;</button>
+        <div class="main">
+            <div class="w3-dropdown-click w3-left"></div>
+            <div class="w3-dropdown-click w3-right">
+                <span>
+                    Welcome <i class="fa-solid fa-user w3-lime">
+                        <%= user && user.name ? user.name : 'Guest' %>
+                    </i> &nbsp;&nbsp;
+                </span>
+            </div>
+
+            <div id="mySidepanel" class="sidepanel " style="display:none;">
+                <a href="javascript:void(0)" class="closebtn" id="closebtn">
+                    <i class="fa fa-window-close" aria-hidden="true"></i>
+                </a>
+                <h5 class="w3-text-Indigo"> <%= process.env.APP_FULL_NAME %> </h5>
+                <!-- Active Screen <%= user.currentPath %> -->
+                <% if (user.menus && user.menus.length> 0) { %>
+                    <%- renderMenu(user.menus, user.currentPath) %>
+                        <% } else { %>
+                            <p>No Access Available</p>
+                            <% } %>
+
+                                <h6 class="w3-text-dark-gray">Self Care</h6>
+                                <ul class="w3-text-blue-gray">
+                                    <a href="/core/myProfile"> <i class="fas fa-user-edit"></i> Edit My
+                                        Profile
+                                    </a>
+                                    <a href="/core/pswdChange"> <i class="fas fa-key"></i> Change Password
+                                    </a>
+                                    <a href="/logout"> <i class="fa fa-sign-out"> </i> Logout
+                                    </a>
+                                </ul>
+                                <p>
+                                    <a href="javascript:void(0)" class="closebtnD" id="closebtnD">
+                                        <i class="fa fa-window-close" aria-hidden="true"></i>
+                                    </a>
+                                </p>
+            </div>
+
+
+
+            <h3 class="w3-center">
+                <%= title %>
+            </h3>
+            <div class="w3-container w3-card-4 w3-round-large w3-center" style="width:95%; margin: 2px auto;">
+                <% if (successMessage) { %>
+                    <div class="w3-panel w3-green w3-center" id="successMessage">
+                        <%= successMessage %>
+                    </div>
+                    <% } else if (errorMessage) { %>
+                        <div class="w3-panel w3-red w3-center" id="errorMessage">
+                            <%= errorMessage %>
+                        </div>
+                        <% } %>
+                            <% var tooltip='No Tips' ; %>
+                                <% function renderMenu(menus, currentPath) { %>
+                                    <ul class="w3-text-dark-gray">
+                                        <% menus.forEach(menu=> { %>
+                                            <% if (menu.status==='1' ) { %>
+                                                <li>
+                                                    <% if (menu.link==currentPath) { %>
+                                                        <div class="tooltip-container">
+                                                            <i class="fas fa-question-circle"></i>
+                                                            <div class="tooltip-text">
+                                                                <%= menu.tooltip %>
+                                                            </div>
+                                                        </div>
+
+                                                        <a href="<%= menu.link %>">
+                                                            <i class="<%= menu.icon %>"></i> &nbsp;
+                                                            <b class="w3-text-green">
+                                                                <%= menu.name %>
+                                                            </b>
+                                                        </a>
+                                                        <% } else {%>
+                                                            <a href="<%= menu.link %>">
+                                                                <i class="<%= menu.icon %>"></i> &nbsp;
+                                                                <%= menu.name %>
+                                                            </a>
+
+                                                            <% } %>
+                                                                <% if (menu.children && menu.children.length> 0) { %>
+                                                                    <%- renderMenu(menu.children, currentPath) %>
+                                                                        <% } %>
+                                                </li>
+                                                <% } %>
+                                                    <% }) %>
+                                    </ul>
+                                    <% } %>

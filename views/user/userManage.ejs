@@ -1,0 +1,79 @@
+<%- include('../partials/header') %>
+  <div class="container text-center">
+    <h3 class="mt-5">User Management</h3>
+
+    <% if (errorMessage) { %>
+      <div class="alert alert-danger">
+        <%= errorMessage %>
+      </div>
+      <% } %>
+        <% if (successMessage) { %>
+          <div class="alert alert-success">
+            <%= successMessage %>
+          </div>
+          <% } %>
+
+
+            <!--h4 class="mt-4">All Users</h4-->
+            <!-- div class="text-right">
+              <a href="/userAdd" class="btn btn-primary text-right">Add New User</a>
+            </div-->
+
+            <table class="table table-bordered mt-3">
+              <thead>
+                <tr>
+                  <th>SAP ID</th>
+                  <th>Leg ID</th>
+                  <th>Name</th>
+                  <th>Division</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(user=> { %>
+                  <tr>
+                    <td>
+                      <%= user.sap_id %>
+                    </td>
+                    <td>
+                      <%= user.leg_id %>
+                    </td>
+                    <td>
+                      <%= user.name %>
+                    </td>
+                    <td>
+                      <%= user.division %>
+                    </td>
+                    <td>
+                      <%= user.department %>
+                    </td>
+                    <td>
+                      <%= user.status %>
+                    </td>
+                    <td>
+                      <form action="/user/<%= user.sap_id %>/toggle" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-secondary">
+                          <%= user.status==='Working' ? 'Deactivate' : 'Activate' %>
+                        </button>
+                      </form>
+                      <form action="/user/<%= user.sap_id %>/reset-password" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-warning">Reset Password</button>
+                      </form>
+                      <form action="/user/<%= user.sap_id %>/edit" method="get" style="display:inline;">
+                        <button type="submit" class="btn btn-info">Edit</button>
+                      </form>
+                      <form action="/user/<%= user.sap_id %>/delete" method="post" style="display:inline;"
+                        onsubmit="return confirm('Are you sure you want to delete this user?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                  <% }) %>
+              </tbody>
+            </table>
+
+  </div>
+
+  <%- include('../partials/footer') %>

@@ -1,0 +1,1147 @@
+<%- include('../../../partials/header', { title: "Issue Details" }) %>
+
+<style>
+:root {
+  /* Enhanced color palette */
+  --primary: #1a365d;
+  --primary-light: #2d4a7b;
+  --secondary: #4a5568;
+  --muted: #718096;
+  --bg: #f7fafc;
+  --bg-secondary: #edf2f7;
+  --card: #ffffff;
+  --accent: #3182ce;
+  --accent-light: #63b3ed;
+  --danger: #e53e3e;
+  --warning: #d69e2e;
+  --success: #38a169;
+  --info: #0ea5e9;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05);
+  --radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark mode support */
+[data-theme="dark"] {
+  --primary: #e2e8f0;
+  --primary-light: #cbd5e0;
+  --secondary: #a0aec0;
+  --muted: #a0aec0;
+  --bg: #1a202c;
+  --bg-secondary: #2d3748;
+  --card: #2d3748;
+  --border: #4a5568;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.3), 0 4px 6px rgba(0,0,0,0.2);
+}
+
+body { 
+  background: var(--bg); 
+  font-family: 'Inter', system-ui, Arial, sans-serif;
+  color: var(--primary);
+  transition: var(--transition);
+}
+
+.page-container { 
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header section */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.page-title i {
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.theme-toggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--muted);
+}
+
+.theme-toggle:hover {
+  background: var(--accent);
+  color: white;
+  transform: rotate(180deg);
+}
+
+.back-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.back-btn:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* Card styles */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 1.5rem;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-title i {
+  color: var(--accent);
+}
+
+/* Info rows */
+.info-row {
+  display: flex;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 600;
+  width: 180px;
+  color: var(--secondary);
+}
+
+.info-value {
+  flex: 1;
+  color: var(--primary);
+}
+
+/* Status badges */
+.status-badge {
+  padding: 0.375rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.status-open {
+  background-color: rgba(229, 62, 62, 0.1);
+  color: var(--danger);
+}
+
+.status-assigned {
+  background-color: rgba(49, 130, 206, 0.1);
+  color: var(--accent);
+}
+
+.status-inrepair {
+  background-color: rgba(214, 158, 46, 0.1);
+  color: var(--warning);
+}
+
+.status-resolved {
+  background-color: rgba(56, 161, 105, 0.1);
+  color: var(--success);
+}
+
+/* Action buttons */
+.action-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-warning { 
+  background: var(--warning); 
+  color: white;
+}
+
+.btn-warning:hover {
+  background: #b7791f;
+}
+
+.btn-success { 
+  background: var(--success); 
+  color: white;
+}
+
+.btn-success:hover {
+  background: #2f855a;
+}
+
+.btn-danger { 
+  background: var(--danger); 
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #c53030;
+}
+
+.btn-outline { 
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--bg-secondary);
+}
+
+/* Timeline */
+.timeline {
+  margin-top: 1rem;
+  padding-left: 2rem;
+  position: relative;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 2px solid var(--card);
+  box-shadow: 0 0 4px rgba(0,0,0,0.15);
+}
+
+.timeline-event {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--primary);
+}
+
+.timeline-details {
+  margin-bottom: 0.25rem;
+  color: var(--secondary);
+}
+
+.timeline-time {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* Modal improvements */
+.modal-content {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  background: var(--card);
+  color: var(--primary);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem;
+}
+
+.modal-title {
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-title i {
+  color: var(--accent);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.form-control {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.625rem 0.875rem;
+  transition: var(--transition);
+  background: var(--card);
+  color: var(--primary);
+}
+
+.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+  outline: none;
+}
+
+/* Toast notification */
+.toast-container {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.toast {
+  min-width: 300px;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: white;
+  transform: translateX(120%);
+  transition: transform 0.3s ease;
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast-success {
+  background-color: var(--success);
+}
+
+.toast-error {
+  background-color: var(--danger);
+}
+
+.toast-warning {
+  background-color: var(--warning);
+}
+
+.toast-info {
+  background-color: var(--info);
+}
+
+/* Confirmation dialog */
+.confirm-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.confirm-dialog.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.confirm-content {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.confirm-dialog.show .confirm-content {
+  transform: scale(1);
+}
+
+.confirm-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--primary);
+}
+
+.confirm-message {
+  margin-bottom: 1.5rem;
+  color: var(--secondary);
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+/* Loading spinner */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .loading-overlay {
+  background: rgba(26, 32, 44, 0.8);
+}
+
+.loading-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--border);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Alert styling */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alert-warning {
+  background-color: rgba(214, 158, 46, 0.1);
+  color: #744210;
+  border-left: 4px solid var(--warning);
+}
+
+.alert-info {
+  background-color: rgba(49, 130, 206, 0.1);
+  color: #2c5282;
+  border-left: 4px solid var(--accent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .info-row {
+    flex-direction: column;
+  }
+  
+  .info-label {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+  
+  .action-btn {
+    margin-right: 0;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .modal-footer {
+    padding: 1rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+</style>
+
+<div class="page-container">
+  <div class="page-header">
+    <h2 class="page-title">
+      <i class="bi bi-tools"></i> Issue #<%= issue.issue_id %>
+    </h2>
+    <div class="header-actions">
+      <button class="back-btn" onclick="history.back()">
+        <i class="bi bi-arrow-left"></i> Back
+      </button>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <i class="bi bi-moon-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- BASIC TICKET INFO -->
+  <div class="card fade-in">
+    <div class="section-title">
+      <i class="bi bi-info-circle"></i> Ticket Overview
+    </div>
+
+    <div class="info-row">
+      <div class="info-label">Asset Tag:</div>
+      <div class="info-value"><strong><%= issue.tag %></strong></div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-label">Description:</div>
+      <div class="info-value"><%= issue.description %></div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-label">Category:</div>
+      <div class="info-value"><%= issue.category %></div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-label">Status:</div>
+      <div class="info-value">
+        <% if(issue.status === 'Open'){ %>
+          <span class="status-badge status-open"><i class="bi bi-exclamation-circle"></i> Open</span>
+        <% } else if(issue.status === 'Assigned'){ %>
+          <span class="status-badge status-assigned"><i class="bi bi-person-check"></i> Assigned</span>
+        <% } else if(issue.status === 'InRepair'){ %>
+          <span class="status-badge status-inrepair"><i class="bi bi-tools"></i> In Repair</span>
+        <% } else if(issue.status === 'Resolved'){ %>
+          <span class="status-badge status-resolved"><i class="bi bi-check-circle"></i> Resolved</span>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-label">Raised By:</div>
+      <div class="info-value">User #<%= issue.raised_by %></div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-label">Raised At:</div>
+      <div class="info-value"><%= issue.createdAt.toLocaleString() %></div>
+    </div>
+
+    <% if(issue.assigned_to){ %>
+      <div class="info-row">
+        <div class="info-label">Assigned Technician:</div>
+        <div class="info-value"><%= issue.assigned_to %></div>
+      </div>
+    <% } %>
+
+    <% if(issue.closed_at){ %>
+      <div class="info-row">
+        <div class="info-label">Closed At:</div>
+        <div class="info-value"><%= issue.closed_at.toLocaleString() %></div>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="card fade-in">
+    <div class="section-title">
+      <i class="bi bi-gear"></i> Admin / Technician Actions
+    </div>
+
+    <% if(issue.status === 'Open'){ %>
+      <button class="action-btn btn-warning" onclick="openAssignModal(<%= issue.issue_id %>)">
+        <i class="bi bi-person-plus"></i> Assign Technician
+      </button>
+    <% } %>
+
+    <% if(issue.status === 'Assigned'){ %>
+      <button class="action-btn btn-success" onclick="openResolveModal(<%= issue.issue_id %>)">
+        <i class="bi bi-check-circle"></i> Mark as Resolved
+      </button>
+    <% } %>
+
+    <% if(issue.status === 'Resolved'){ %>
+      <span class="status-badge status-resolved">
+        <i class="bi bi-check-circle"></i> Ticket Closed
+      </span>
+    <% } %>
+  </div>
+
+  <!-- ADMIN FINALIZATION (Visible only if status == 'Resolved') -->
+  <% if(issue.status === 'Resolved'){ %>
+    <div class="card fade-in">
+      <div class="section-title">
+        <i class="bi bi-flag"></i> Admin Finalization
+      </div>
+
+      <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        Technician has resolved this issue. Decide the final asset state.
+      </div>
+
+      <div>
+        <button class="action-btn btn-success" onclick="finalizeAsset('free')">
+          <i class="bi bi-box-seam"></i> Finalize & Mark Free
+        </button>
+
+        <button class="action-btn btn-outline" onclick="openReallocateModal()">
+          <i class="bi bi-arrow-repeat"></i> Reallocate Asset
+        </button>
+
+        <button class="action-btn btn-danger" onclick="finalizeAsset('condemn')">
+          <i class="bi bi-trash"></i> Condemn Asset
+        </button>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- TIMELINE -->
+  <div class="card fade-in">
+    <div class="section-title">
+      <i class="bi bi-clock-history"></i> Repair Timeline
+    </div>
+
+    <div class="timeline">
+      <% logs.forEach(log => { %>
+        <div class="timeline-item">
+          <div class="timeline-event"><%= log.event %></div>
+          <div class="timeline-details"><%= log.details %></div>
+          <div class="timeline-time"><%= log.createdAt.toLocaleString() %></div>
+        </div>
+      <% }) %>
+
+      <% if(logs.length === 0){ %>
+        <div class="text-center py-4 text-muted">
+          <i class="bi bi-info-circle"></i> No logs available.
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- Confirmation dialog -->
+<div class="confirm-dialog" id="confirmDialog">
+  <div class="confirm-content">
+    <h3 class="confirm-title" id="confirmTitle">Confirm Action</h3>
+    <p class="confirm-message" id="confirmMessage">Are you sure you want to proceed?</p>
+    <div class="confirm-actions">
+      <button class="btn btn-outline-secondary" id="confirmCancel">Cancel</button>
+      <button class="btn btn-primary" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGN MODAL -->
+<div class="modal fade" id="assignModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-person-plus"></i> Assign Technician
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="assignIssueId">
+
+        <div class="mb-3">
+          <label class="form-label">Technician</label>
+          <select id="techSelect" class="form-control">
+            <option value="">Select a technician</option>
+            <option value="201">Tech - Ramesh</option>
+            <option value="202">Tech - Suresh</option>
+            <option value="203">Tech - Mahesh</option>
+          </select>
+        </div>
+
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle"></i> The selected technician will be notified of this assignment.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-warning" onclick="assignTech()">
+          <i class="bi bi-person-check"></i> Assign
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESOLVE MODAL -->
+<div class="modal fade" id="resolveModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-check-circle"></i> Resolution Details
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="resolveIssueId">
+
+        <div class="mb-3">
+          <label class="form-label">Resolution Summary</label>
+          <textarea id="resolveNote" class="form-control" rows="4" placeholder="Describe what was done to resolve this issue..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-success" onclick="resolveIssue()">
+          <i class="bi bi-check-circle"></i> Mark Resolved
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REALLOCATE MODAL -->
+<div class="modal fade" id="reallocateModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-arrow-repeat"></i> Reallocate Asset
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="finalIssueId" value="<%= issue.issue_id %>">
+
+        <div class="alert alert-warning">
+          <i class="bi bi-exclamation-triangle"></i> This will reallocate the asset to a new employee.
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Employee Name</label>
+            <input id="re_name" class="form-control" required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">SAP ID</label>
+            <input id="re_sap" class="form-control" required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Department</label>
+            <input id="re_dept" class="form-control">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Division</label>
+            <input id="re_div" class="form-control">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Phone</label>
+            <input id="re_phone" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-warning" onclick="submitReallocate()">
+          <i class="bi bi-arrow-repeat"></i> Reallocate
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  document.addEventListener("DOMContentLoaded", () => {
+    initTheme();
+    initEventListeners();
+  });
+
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+  }
+
+  function updateThemeIcon(theme) {
+    const themeIcon = document.querySelector('#themeToggle i');
+    themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+  }
+
+  function initEventListeners() {
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+
+    // Confirmation dialog
+    document.getElementById('confirmCancel').addEventListener('click', hideConfirmDialog);
+  }
+
+  function showLoading() {
+    document.getElementById('loadingOverlay').classList.add('show');
+  }
+
+  function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('show');
+  }
+
+  function showToast(message, type = 'info') {
+    const toastContainer = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icon = type === 'success' ? 'check-circle' : 
+                 type === 'error' ? 'x-circle' : 
+                 type === 'warning' ? 'exclamation-triangle' : 
+                 'info-circle';
+    
+    toast.innerHTML = `
+      <i class="bi bi-${icon}"></i>
+      <span>${message}</span>
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    // Show toast
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  function showConfirmDialog(title, message, onConfirm) {
+    const dialog = document.getElementById('confirmDialog');
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMessage').textContent = message;
+    
+    // Remove previous event listener
+    const confirmBtn = document.getElementById('confirmOk');
+    const newConfirmBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+    
+    // Add new event listener
+    newConfirmBtn.addEventListener('click', () => {
+      hideConfirmDialog();
+      onConfirm();
+    });
+    
+    dialog.classList.add('show');
+  }
+
+  function hideConfirmDialog() {
+    document.getElementById('confirmDialog').classList.remove('show');
+  }
+
+  function openAssignModal(id){
+    document.getElementById("assignIssueId").value = id;
+    new bootstrap.Modal(document.getElementById("assignModal")).show();
+  }
+
+  function openResolveModal(id){
+    document.getElementById("resolveIssueId").value = id;
+    new bootstrap.Modal(document.getElementById("resolveModal")).show();
+  }
+
+  async function assignTech(){
+    const id = document.getElementById("assignIssueId").value;
+    const tech = document.getElementById("techSelect").value;
+
+    if(!tech){ 
+      showToast("Please select a technician", "warning");
+      return; 
+    }
+
+    showLoading();
+    
+    try {
+      const res = await fetch('/ams/api/issues/assign', {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ issue_id:id, assigned_to:tech })
+      });
+
+      const j = await res.json();
+      
+      if(j.success) {
+        showToast("Technician assigned successfully", "success");
+        bootstrap.Modal.getInstance(document.getElementById("assignModal")).hide();
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        showToast(j.message || "Failed to assign technician", "error");
+      }
+    } catch (error) {
+      showToast("An error occurred while assigning technician", "error");
+      console.error(error);
+    } finally {
+      hideLoading();
+    }
+  }
+
+  async function resolveIssue(){
+    const id = document.getElementById("resolveIssueId").value;
+    const note = document.getElementById("resolveNote").value;
+
+    if(!note){ 
+      showToast("Please enter a resolution summary", "warning");
+      return; 
+    }
+
+    showLoading();
+    
+    try {
+      const res = await fetch('/ams/api/issues/resolve', {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ issue_id:id, resolution:note })
+      });
+
+      const j = await res.json();
+      
+      if(j.success) {
+        showToast("Issue resolved successfully", "success");
+        bootstrap.Modal.getInstance(document.getElementById("resolveModal")).hide();
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        showToast(j.message || "Failed to resolve issue", "error");
+      }
+    } catch (error) {
+      showToast("An error occurred while resolving the issue", "error");
+      console.error(error);
+    } finally {
+      hideLoading();
+    }
+  }
+
+  function finalizeAsset(action){
+    const issue_id = "<%= issue.issue_id %>";
+    const actionText = action === 'free' ? 'mark as free' : 'condemn';
+    
+    showConfirmDialog(
+      `Confirm ${actionText}`,
+      `Are you sure you want to ${actionText} this asset? This action cannot be undone.`,
+      async () => {
+        showLoading();
+        
+        try {
+          const res = await fetch('/ams/admin/issues/finalize', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({ issue_id, action })
+          });
+          
+          const j = await res.json();
+          
+          if(j.success){
+            showToast(`Asset ${actionText} successfully`, "success");
+            setTimeout(() => location.reload(), 1500);
+          } else {
+            showToast(j.message || `Failed to ${actionText} asset`, "error");
+          }
+        } catch (error) {
+          showToast(`An error occurred while trying to ${actionText} the asset`, "error");
+          console.error(error);
+        } finally {
+          hideLoading();
+        }
+      }
+    );
+  }
+
+  function openReallocateModal(){
+    new bootstrap.Modal(document.getElementById('reallocateModal')).show();
+  }
+
+  function submitReallocate(){
+    const issue_id = "<%= issue.issue_id %>";
+
+    const emp = {
+      name: document.getElementById('re_name').value.trim(),
+      sapid: document.getElementById('re_sap').value.trim(),
+      dept: document.getElementById('re_dept').value.trim(),
+      division: document.getElementById('re_div').value.trim(),
+      phone: document.getElementById('re_phone').value.trim(),
+    };
+
+    if(!emp.name || !emp.sapid){
+      showToast("Employee Name & SAP ID are required", "warning");
+      return;
+    }
+
+    showLoading();
+    
+    try {
+      fetch('/ams/admin/issues/finalize', {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+          issue_id,
+          action:'reallocate',
+          emp
+        })
+      })
+      .then(r=>r.json())
+      .then(j=>{
+        if(j.success){
+          showToast("Asset reallocated successfully", "success");
+          setTimeout(() => location.href = "/ams/admin/issues", 1500);
+        } else {
+          showToast(j.message || "Failed to reallocate asset", "error");
+        }
+      })
+      .catch(error => {
+        showToast("An error occurred while reallocating the asset", "error");
+        console.error(error);
+      })
+      .finally(() => {
+        hideLoading();
+      });
+    } catch (error) {
+      showToast("An error occurred while reallocating the asset", "error");
+      console.error(error);
+      hideLoading();
+    }
+  }
+})();
+</script>
+
+<%- include('../../../partials/footer') %>

@@ -1,0 +1,129 @@
+<%- include('../partials/header',{title:'Map New/Existing Assets'}) %>
+<div class="toastContainer"
+></div>
+
+<div class="contianer">
+
+
+<div class="container">
+
+<!-- Existing Asset Allocation -->
+<div class="card shadow"  id="MapExistingasset">
+    <div class="card-body">
+        <form action="/ams/asset/map_existing_asset" method="post" class="needs-validation">
+                <div class="row">
+            <div class="form-group col-md-6">
+                <label for="tag" class="form-label">Current Tag</label>
+                <input autocomplete="off" type="text" name="tag" minlength="3"  id="tag" required placeholder="Enter Current asset tag" class="form-control shadow">
+                <div class="invalid-feedback">Enter a valid tag number (6 digits).</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="EmpName" class="form-label">Alloted To</label>
+              <div class="input-group" >
+                <input autocomplete="off" list="suggestions" type="text" placeholder="Enter Employee Name" required name="empname" id="empname" 
+                class="form-control shadow">
+                <div class="invalid-feedback">Enter Employee name.</div>
+                <div class="suggestions bg-white shadow" id="suggestions"></div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="sapid" class="form-label">Sap ID</label>
+              <div class="input-group" >
+                <input autocomplete="off" list="suggestions" type="text" placeholder="Enter sapid" maxlength="6" pattern="[0-9]{6}" required name="sapid" id="sapid" readonly
+                class="form-control shadow">
+                <div class="invalid-feedback">Enter a valid sap number (6 digits).</div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="phone" class="form-label">phone</label>
+              <div class="input-group" >
+              <input  autocomplete="off" type="text" name="phone" required id="phone" placeholder="Enter Extension Number" 
+                  class="form-control shadow input-container" >
+              <div class="phone_suggestions shadow bg-white " id="phone_suggestions"></div>
+              </div>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="building" class="form-label">Building</label>
+              <div class="input-group" >
+
+                  <input  autocomplete="off" type="text" name="building" required id="building"  placeholder="Enter building Name" 
+                      class="form-control shadow input-container" required>
+                      <div class="building_Suggestions shadow bg-white " id="building_Suggestions"></div>
+
+                    </div></div>
+            <div class="form-group col-md-6">
+                <label for="designation" class="form-label">Designation</label>
+              <div class="input-group" >
+
+                <input  autocomplete="off" type="text" name="designation" required id="designation" placeholder="Enter designation"
+                    class="form-control shadow input-container" tabindex="-1" readonly>
+                <input type="text" name="division" class="division" hidden>
+              <div class="designationsuggestions shadow bg-white " id="designationsuggestions"></div>
+            </div>
+              <!-- <datalist id="suggestions"></datalist> -->
+            </div>
+              <div class="form-group col-md-6">
+                <label for="Os" class="form-label">OS</label>
+                <select name="Os" class="form-select" id="Os_select">
+                  <option value="select OS">select OS</option>
+                  <option value="Non-OS">Non-OS</option>
+                  <option value="Windows 7">Windows 7</option>
+                  <option value="Windows 8">Windows 8</option>
+                  <option value="Windows 10">Windows 10</option>
+                  <option value="Maya Os">Maya OS</option>
+                </select>
+                <div class="invalid-feedback">select an option.</div>
+              </div>      
+              <div class="form-group col-md-6">
+                  <label for="material_description" class="form-label">Asset Description</label>
+                  <input autocomplete="off" type="text" required name="material_description" id="material_description" class="form-control shadow" placeholder="Enter asset description">
+                  <div class="invalid-feedback">Enter Asset Description.</div>
+
+              </div>
+              <div class="form-group col-md-6">
+                <label for="DeptName " class="form-label">Department Name</label>
+              <div class="input-group">
+                <input autocomplete="off" list="dept_suggestions" placeholder="Enter Deapartment" required type="text" name="deptname" id="deptname" 
+                class="form-control shadow">
+                <div class="dept_suggestions bg-white shadow" id="dept_suggestions"></div>
+                <div class="invalid-feedback">Enter Department name.</div>
+              </div>
+            </div>
+              <div class="form-group col-md-6">
+                  <label for="option" class="form-label">Update Status</label>
+                  <select name="Status" class="form-select shadow" id="Status">
+                    <option value="Alloted">Alloted</option>
+                  </select>
+                  <div class="invalid-feedback">Enter the updated status.</div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="value" class="form-label">Asset Value</label>
+                <input autocomplete="off" type="text" required name="value" id="value"  class="form-control shadow">
+                <div class="invalid-feedback ">Enter Asset Value <i class="bi bi-currency-rupee"></i>.</div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="value" class="form-label">Query Department</label>
+                <select name="queryDepartment" id="queryDepartment" class="form-select shadow">
+                    <option value="">Select a department</option>
+                    <option value="ITD">ITD</option>
+                </select>
+                <div class="invalid-feedback">Enter Query Department.</div>
+              </div>
+                <div class="input-group" >
+                  <button type="submit" class="col-md-6 mt-4 btn shadow btn-primary form-control">Map</button>
+                </div>
+            </form>
+            </div>
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+<script src="/ams/js/ajax.js"></script>
+
+
+  
+
+<%- include('../partials/footer') %>

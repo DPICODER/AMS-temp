@@ -1,0 +1,970 @@
+<%- include('../partials/header',{title:"My Assets"}) %>
+
+<style>
+:root {
+  /* Enhanced color palette */
+  --primary: #1a365d;
+  --primary-light: #2d4a7b;
+  --secondary: #4a5568;
+  --muted: #718096;
+  --accent: #3182ce;
+  --accent-light: #63b3ed;
+  --success: #38a169;
+  --danger: #e53e3e;
+  --warning: #d69e2e;
+  --info: #0ea5e9;
+  --bg: #f7fafc;
+  --bg-secondary: #edf2f7;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05);
+  --radius: 8px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark mode support */
+[data-theme="dark"] {
+  --primary: #e2e8f0;
+  --primary-light: #cbd5e0;
+  --secondary: #a0aec0;
+  --muted: #a0aec0;
+  --accent: #63b3ed;
+  --accent-light: #90cdf4;
+  --success: #68d391;
+  --danger: #fc8181;
+  --warning: #f6ad55;
+  --info: #63b3ed;
+  --bg: #1a202c;
+  --bg-secondary: #2d3748;
+  --card: #2d3748;
+  --border: #4a5568;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.3), 0 4px 6px rgba(0,0,0,0.2);
+}
+
+body { 
+  background: var(--bg); 
+  color: var(--primary); 
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  transition: var(--transition);
+  font-size: 0.9rem;
+}
+
+.container-main { 
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header section */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary);
+}
+
+.header-title i {
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.theme-toggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--muted);
+}
+
+.theme-toggle:hover {
+  background: var(--accent);
+  color: white;
+  transform: rotate(180deg);
+}
+
+.refresh-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.375rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.refresh-btn:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.refresh-btn.spinning i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Stats section */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  border-left: 3px solid transparent;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.stat-card:hover::before {
+  transform: translateX(100%);
+}
+
+.stat-card:nth-child(1) { border-left-color: var(--info); }
+.stat-card:nth-child(2) { border-left-color: var(--accent); }
+.stat-card:nth-child(3) { border-left-color: var(--warning); }
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: white;
+  margin-bottom: 0.75rem;
+}
+
+.stat-icon:nth-child(1) { background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); }
+.stat-icon:nth-child(2) { background: linear-gradient(135deg, #3182ce 0%, #4299e1 100%); }
+.stat-icon:nth-child(3) { background: linear-gradient(135deg, #f59e0b 0%, #f6ad55 100%); }
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.375rem;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 0.125rem;
+  color: var(--primary);
+}
+
+.stat-subtitle {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 0.375rem;
+}
+
+/* Table section */
+.table-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.table-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.table-title {
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.95rem;
+}
+
+.table-title i {
+  color: var(--accent);
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.column-toggle {
+  position: relative;
+}
+
+.column-toggle-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 0.5rem;
+  display: none;
+  min-width: 200px;
+  z-index: 100;
+  border: 1px solid var(--border);
+}
+
+.column-toggle-menu.show {
+  display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btn {
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-light);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #c53030;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--bg-secondary);
+}
+
+/* Table content */
+.table-content {
+  padding: 0;
+}
+
+/* Tabulator customizations */
+.tabulator {
+  border: none;
+}
+
+.tabulator .tabulator-header {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.tabulator .tabulator-header .tabulator-col {
+  border-right: none;
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.875rem;
+}
+
+.tabulator .tabulator-row {
+  border-bottom: 1px solid var(--border);
+}
+
+.tabulator .tabulator-row:hover {
+  background-color: var(--bg-secondary);
+}
+
+.tabulator .tabulator-row .tabulator-cell {
+  border-right: none;
+  padding: 0.5rem 0.375rem;
+  font-size: 0.875rem;
+}
+
+/* Status badges */
+.badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 2rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-free {
+  background-color: rgba(56, 161, 105, 0.1);
+  color: var(--success);
+}
+
+.badge-alloted {
+  background-color: rgba(49, 130, 206, 0.1);
+  color: var(--accent);
+}
+
+.badge-repair {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+}
+
+/* Action buttons */
+.action-btn {
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.action-report {
+  background: var(--danger);
+  color: white;
+}
+
+.action-report:hover {
+  background: #c53030;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.action-disabled {
+  background: var(--bg-secondary);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+/* Empty state */
+.no-assets {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--muted);
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+.no-assets h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--secondary);
+}
+
+.no-assets i {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--border);
+}
+
+/* Modal improvements */
+.modal-content {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  background: var(--card);
+  color: var(--primary);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem;
+}
+
+.modal-title {
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.modal-title i {
+  color: var(--accent);
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border);
+  padding: 1rem;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+  color: var(--primary);
+  font-size: 0.875rem;
+}
+
+.form-control {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  transition: var(--transition);
+  background: var(--card);
+  color: var(--primary);
+  font-size: 0.875rem;
+}
+
+.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+  outline: none;
+}
+
+/* Toast notification */
+.toast-container {
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  z-index: 5000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  min-width: 250px;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  transform: translateX(120%);
+  transition: transform 0.3s ease;
+  font-size: 0.875rem;
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast-success {
+  background-color: var(--success);
+}
+
+.toast-danger {
+  background-color: var(--danger);
+}
+
+.toast-info {
+  background-color: var(--info);
+}
+
+/* Loading overlay */
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(2px);
+  z-index: 4000;
+}
+
+.loader-overlay.show {
+  display: flex;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s linear infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container-main {
+    padding: 0.75rem;
+  }
+  
+  .header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .table-card {
+    overflow-x: auto;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+</style>
+
+<div class="container-main">
+  <div class="header-row">
+    <h1 class="header-title">
+      <i class="bi bi-box-seam"></i> My Assets
+    </h1>
+    <div class="header-actions">
+      <button id="refreshBtn" class="refresh-btn">
+        <i class="bi bi-arrow-clockwise"></i> Refresh
+      </button>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <i class="bi bi-moon-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-currency-rupee"></i>
+      </div>
+      <div class="stat-label">Total Asset Value</div>
+      <div class="stat-value" id="totalValue">₹ 0</div>
+      <div class="stat-subtitle" id="totalCountSmall">0 assets</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-percent"></i>
+      </div>
+      <div class="stat-label">Utilization</div>
+      <div class="stat-value" id="utilization">0%</div>
+      <div class="stat-subtitle">Your allocated vs your assets</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-tools"></i>
+      </div>
+      <div class="stat-label">Assets Under Repair</div>
+      <div class="stat-value" id="repairAssets">0</div>
+      <div class="stat-subtitle">Open repair tickets you raised</div>
+    </div>
+  </div>
+
+  <% if (userAssets && userAssets.length > 0) { %>
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="bi bi-list-ul"></i> Allocated Assets
+      </div>
+      <div class="controls">
+        <div class="column-toggle">
+          <button id="columnToggleBtn" class="btn btn-outline">
+            <i class="bi bi-layout-three-columns"></i> Columns
+          </button>
+          <div id="columnToggleMenu" class="column-toggle-menu"></div>
+        </div>
+        <div id="totalCount" class="muted-small"></div>
+      </div>
+    </div>
+    <div class="table-content">
+      <div id="assetsTable"></div>
+    </div>
+  </div>
+  <% } else { %>
+  <div class="no-assets">
+    <i class="bi bi-inbox"></i>
+    <h3>No allocated assets</h3>
+    <p>You have no assets allocated. If you think this is a mistake, contact IT.</p>
+  </div>
+  <% } %>
+</div>
+
+<!-- loader -->
+<div class="loader-overlay" id="loader">
+  <div class="spinner"></div>
+</div>
+
+<!-- issue modal -->
+<div class="modal fade" id="issueModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle"></i> Report Asset Issue
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="issueTag" />
+        <div class="mb-3">
+          <div class="form-label">Asset</div>
+          <div id="issueAssetDesc" class="form-control" style="background: var(--bg-secondary);"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Category</label>
+          <select id="issueCategory" class="form-control">
+            <option>Hardware</option>
+            <option>Software</option>
+            <option>Network</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea id="issueDesc" class="form-control" rows="4" placeholder="Describe the issue in detail..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
+        <button id="submitIssueBtn" class="btn btn-danger">
+          <i class="bi bi-exclamation-circle"></i> Submit Issue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- toast container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<script>
+(function(){
+  // initial data passed from server
+  const assetsData = <%- JSON.stringify(userAssets || []) %>;
+  const initialTotalValue = <%- totalValue || 0 %>;
+  const initialUtilization = <%- utilization || 0 %>;
+  const initialRepairCount = <%- repairAssets || 0 %>;
+
+  const loader = document.getElementById('loader');
+  function showLoader(){ loader.classList.add('show'); }
+  function hideLoader(){ loader.classList.remove('show'); }
+
+  // Initialize theme
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+  }
+
+  function updateThemeIcon(theme) {
+    const themeIcon = document.querySelector('#themeToggle i');
+    themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+  }
+
+  // Toast notification
+  function showToast(msg, type='info'){
+    const toastContainer = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icon = type === 'success' ? 'check-circle' : 
+                 type === 'danger' ? 'x-circle' : 
+                 'info-circle';
+    
+    toast.innerHTML = `
+      <i class="bi bi-${icon}"></i>
+      <span>${msg}</span>
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    // Show toast
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  // Currency formatter
+  function fmtCurrency(x){ 
+    return '₹ ' + Number(x||0).toLocaleString('en-IN'); 
+  }
+
+  // Initialize page
+  document.addEventListener('DOMContentLoaded', ()=>{
+    initTheme();
+    
+    // Set initial values
+    document.getElementById('totalValue').textContent = fmtCurrency(initialTotalValue);
+    document.getElementById('utilization').textContent = (initialUtilization||0) + '%';
+    document.getElementById('repairAssets').textContent = initialRepairCount;
+
+    initTable();
+    buildColumnToggleMenu();
+    
+    // Event listeners
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      const btn = document.getElementById('refreshBtn');
+      btn.classList.add('spinning');
+      reloadAssets();
+    });
+    
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+  });
+
+  // Tabulator table
+  let table;
+  function initTable(){
+    if(table) return;
+
+    table = new Tabulator("#assetsTable", {
+      data: assetsData,
+      layout:"fitColumns",
+      pagination:"local",
+      paginationSize:10,
+      placeholder:"No assets found",
+      columns:[
+        {title:"#", field:"al_id", width:60},
+        {title:"Tag", field:"al_uniqueId", width:180, formatter:function(cell) {
+          return `<strong>${cell.getValue()}</strong>`;
+        }},
+        {title:"Description", field:"al_description", widthGrow:2},
+        {title:"Allocated On", field:"al_allocated_on", width:120,
+          formatter:c=> c.getValue() ? new Date(c.getValue()).toLocaleDateString() : 'N/A'
+        },
+        {title:"Status", field:"al_status", width:100, formatter:function(cell){
+          const s = cell.getValue();
+          if(s==='Free') return '<span class="badge badge-free"><i class="bi bi-check-circle"></i> Free</span>';
+          if(s==='Alloted') return '<span class="badge badge-alloted"><i class="bi bi-person-check"></i> Alloted</span>';
+          if(s==='Reallocated') return '<span class="badge badge-alloted"><i class="bi bi-arrow-repeat"></i> Reallocated</span>';
+          if(s==='Repair') return '<span class="badge badge-repair"><i class="bi bi-tools"></i> Under Repair</span>';
+          return s;
+        }},
+        {title:"Cycles", field:"al_cycle_count", width:80},
+        {title:"Action", width:140, hozAlign:"center",
+          formatter:function(cell){
+            const d = cell.getRow().getData();
+            if(d.al_status === 'Repair')
+              return `<button class="action-btn action-disabled" disabled><i class="bi bi-tools"></i> Under Repair</button>`;
+            return `<button class="action-btn action-report" data-tag="${d.al_uniqueId}" data-desc="${encodeURIComponent(d.al_description||'')}" onclick="openIssueModalFromBtn(this)"><i class="bi bi-exclamation-triangle"></i> Report Issue</button>`;
+          }
+        }
+      ]
+    });
+
+    document.getElementById('totalCount').textContent = `${assetsData.length} assets`;
+    document.getElementById('totalCountSmall').textContent = `${assetsData.length} assets`;
+  }
+
+  // column toggle menu
+  function buildColumnToggleMenu(){
+    const menu = document.getElementById('columnToggleMenu');
+    menu.innerHTML='';
+    table.getColumns().forEach(col=>{
+      const field = col.getField();
+      const title = col.getDefinition().title;
+      const id = 'col-' + field;
+      const row = document.createElement('div');
+      row.className = 'd-flex align-items-center mb-2';
+      row.innerHTML = `
+        <input type="checkbox" id="${id}" data-field="${field}" ${col.isVisible()?'checked':''} class="form-check-input me-2">
+        <label for="${id}" class="form-check-label">${title}</label>
+      `;
+      menu.appendChild(row);
+    });
+
+    menu.querySelectorAll('input').forEach(cb=>{
+      cb.addEventListener('change', function(){
+        const col = table.getColumn(this.dataset.field);
+        this.checked ? col.show() : col.hide();
+      });
+    });
+
+    document.getElementById('columnToggleBtn').addEventListener('click',()=>{
+      document.getElementById('columnToggleMenu').classList.toggle('show');
+    });
+
+    document.addEventListener('click', e=>{
+      const m = document.getElementById('columnToggleMenu');
+      if(!document.getElementById('columnToggleBtn').contains(e.target) && !m.contains(e.target)){
+        m.classList.remove('show');
+      }
+    });
+  }
+
+  // open modal from table button
+  window.openIssueModalFromBtn = function(btn){
+    const tag = btn.dataset.tag;
+    const desc = decodeURIComponent(btn.dataset.desc||'');
+    document.getElementById("issueTag").value = tag;
+    document.getElementById("issueAssetDesc").textContent = `${tag} — ${desc}`;
+    document.getElementById("issueDesc").value = '';
+
+    new bootstrap.Modal(document.getElementById("issueModal")).show();
+  };
+
+  // submit issue
+  document.getElementById("submitIssueBtn").addEventListener("click", async ()=>{
+    const tag = document.getElementById("issueTag").value;
+    const category = document.getElementById("issueCategory").value;
+    const description = document.getElementById("issueDesc").value.trim();
+
+    if(!description) {
+      showToast('Please enter a description', 'danger');
+      return;
+    }
+
+    try{
+      showLoader();
+      const res = await fetch('/ams/api/issues/raise', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ tag, category, description })
+      });
+
+      const j = await res.json();
+      hideLoader();
+
+
+      if(!j.success){
+        showToast(j.message || 'Failed to raise issue', 'danger');
+        return;
+      }else{
+        window.location.reload();
+      }
+
+      bootstrap.Modal.getInstance(document.getElementById("issueModal")).hide();
+      showToast('Issue raised successfully', 'success');
+
+      // Optimistic UI
+      const row = table.getData().find(r=>r.al_uniqueId===tag);
+      if(row){
+        row.al_status='Repair';
+        table.updateRow(row.al_id, row);
+        document.getElementById('repairAssets').textContent =
+          Number(document.getElementById('repairAssets').textContent)+1;
+      }
+    }
+    catch(err){
+      hideLoader();
+      showToast('Network error', 'danger');
+    }
+  });
+
+  // reload
+  function reloadAssets(){
+    window.location.reload();
+  }
+})();
+</script>
+
+<%- include('../partials/footer') %>

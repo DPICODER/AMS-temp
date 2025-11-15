@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>
+        <%= title %>
+    </title>
+    <link rel="icon" href="/ams/ams_favicon.ico" type="image/x-icon">
+    <script src="/ams/js/jquery.min.js"></script>
+    <script src="/ams/js/jquery-ui.js"></script>
+    <link href="/ams/css/pista.css" rel="stylesheet">
+    <link href="/ams/css/tabulator.css" rel="stylesheet">
+    <link href="/ams/css/custom.css" rel="stylesheet" />
+    <link href="/ams/css/menu.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/ams/css/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="/ams/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/ams/tabulator/dist/css/tabulator_simple.min.css">
+    <script src="/ams/js/chart.umd.js"></script>
+    <script src="/ams/tabulator/dist/js/tabulator.min.js"></script>
+    <script src="/ams/js/bootstrap.bundle.min.js"></script>
+    <script src="/ams/js/xlsx.full.min.js"></script>
+    <script src="/ams/js/popper.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // alert("Hi");
+            $("#closebtn").click(function () {
+                $("#mySidepanel").fadeToggle(200);
+                $('#mySidepanel').removeClass('active');
+                $('#overlay').fadeOut(200);
+            });
+            $("#closebtnD").click(function () {
+                $("#mySidepanel").fadeToggle(200);
+            });
+
+            $("#menubtn").click(function () {
+                $("#mySidepanel").fadeToggle(200);
+                $('#mySidepanel').addClass('active');
+                $('#overlay').fadeIn(200);
+            });
+        });
+
+    </script>
+
+    <style>
+        @font-face {
+            font-family: 'Poppins';
+            src: url('/ams/ams/fonts/Poppins-Regular.ttf')format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .logout {
+            cursor: pointer;
+            z-index: 1000;
+            text-decoration: none;
+            color: red;
+        }
+
+        .card {
+            border-radius: 2rem;
+            background-color: rgba(255, 255, 255, 0.726);
+        }
+
+        .btn {
+            border-radius: 1rem;
+        }
+
+        .form-control {
+            border-radius: 1rem;
+        }
+
+        .card-body {
+            transition: height 0.3 ease;
+            overflow: hidden;
+        }
+
+        .logout {
+            cursor: pointer;
+            z-index: 1000;
+            text-decoration: none;
+            color: red;
+        }
+
+        #alert-container {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1055;
+            width: 300px;
+        }
+
+        .custom-alert {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .alert-success {
+            border-left: 5px solid #16ca34;
+        }
+
+        .alert-danger {
+            border-left: 5px solid #d64949;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --success: #06ffa5;
+            --warning: #ffbe0b;
+            --danger: #fb5607;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            /* background: rgba(255, 255, 255, 0.9); */
+            /* backdrop-filter: blur(10px); */
+            padding: 0.2rem 0.5rem;
+            /* box-shadow: var(--shadow-sm); */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: none;
+            border-radius: 50px;
+            background: var(--light);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            background: var(--light);
+            transition: var(--transition);
+        }
+
+        .user-info:hover {
+            background: var(--gray-light);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+    </style>
+
+</head>
+
+<body>
+    <div id="overlay"></div>
+    <div class="content" id="main_container">
+
+        <div class="logo-container  w3-left">
+            <div class="logo" id="logo">
+                <div class="logo-front">
+                    <span>
+                        <%=process.env.APP_NAME_H%>
+                    </span>
+                    <!--img class="logo" src="/images/bdl_logo.png" /-->
+                </div>
+                <div class="logo-back">
+                    <span>
+                        <%=process.env.APP_NAME%>
+                    </span>
+
+                </div>
+            </div>
+        </div>
+        <!-- <button class="btn btn-sm border border-info menubtn bi bi-list " id="menubtn" style="background-color:  #C1E1C1;">  Menu &nbsp;</button> -->
+        <div class="main ">
+            <header class="header">
+                <div class="header-content">
+                    <div class="logo-container ">
+                    <div class="logo" id="logo">
+                        <div class="logo-front">
+                            <span>
+                                <%=process.env.APP_NAME_H%>
+                            </span>
+                            <!--img class="logo" src="/images/bdl_logo.png" /-->
+                        </div>
+                        <div class="logo-back">
+                            <span>
+                                <%=process.env.APP_NAME%>
+                            </span>
+        
+                        </div>
+                    </div>
+                    </div>
+                    <div class="d-flex ms-auto">
+                        <div class="user-profile">
+                            <div class="user-info">
+                                <!-- <div class="user-avatar">JD</div> -->
+                                <div class="user-name">
+                                    <%= user && user.name ? user.name : 'Guest' %>
+                                    <%= user && user.department ? user.department : 'Guest' %>
+                                </div>
+                                <a href="/ams/logout" class="logout py-2 text-danger  ">
+                                    Logout <i class="bi bi-box-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+
+
+            <div id="mySidepanel" class="border border-info shadow sidepanel navbar-expand-sm" style="display:none;">
+                <a href="javascript:void(0)" class="ms-auto closebtn btn-close" id="closebtn">
+                </a>
+                <h5 class="bi bi-box-seam" style="font-size: 18px;">
+                    <%= process.env.APP_FULL_NAME %>
+                </h5>
+
+                <% if (user.menus && user.menus.length> 0) { %>
+                    <%- renderMenu(user.menus, user.currentPath) %>
+
+                        <% } else { %>
+                            <p>No Access Available</p>
+                            <% } %>
+                                <a href="/ams/logout"
+                                    class="col-md-3 btn btn-xs btn-danger bi bi-box-arrow-right text-white"
+                                    style="background-color: red;">Logout</a>
+
+            </div>
+
+            <h3 class="text-center" id="page_title">
+                <%= title %>
+            </h3>
+
+            <div id="alert-container"></div>
+
+            <script>
+                const successmessage = <%-JSON.stringify(successMessage) %>;
+                const errormessage = <%-JSON.stringify(errorMessage) %>;
+                if (successmessage) {
+                    showCustomAlert(message = successmessage, type = "Success");
+                } else {
+                    showCustomAlert(message = errormessage, type = "Error")
+                }
+                function showCustomAlert(message, type) {
+                    if (type == "Success") {
+                        const container = document.getElementById('alert-container');
+                        const existing = container.querySelector('.custom-alert');
+                        if (existing) existing.remove();
+
+                        const alert = document.createElement('div');
+                        alert.className = `alert alert-success border-success fw-bold  custom-alert  cs_shadow-lg position-relative`;
+                        alert.innerHTML = `
+                        ${message}
+                        `
+
+                        container.appendChild(alert);
+
+                        setTimeout(() => alert.classList.add('show'), 10);
+
+                        setTimeout(() => {
+                            alert.classList.remove('show');
+                            setTimeout(() => alert.remove(), 300);
+                        }, 5000);
+                    } else {
+                        const container = document.getElementById('alert-container');
+                        const existing = container.querySelector('.custom-alert');
+                        if (existing) existing.remove();
+
+                        const alert = document.createElement('div');
+                        alert.className = `alert alert-danger border-danger fw-bold  custom-alert  cs_shadow-md position-relative`;
+                        alert.innerHTML = `
+                        ${message}
+                        `
+
+                        container.appendChild(alert);
+
+                        setTimeout(() => alert.classList.add('show'), 10);
+
+                        setTimeout(() => {
+                            alert.classList.remove('show');
+                            setTimeout(() => alert.remove(), 300);
+                        }, 5000);
+                    }
+                }
+            </script>
+
+            <% var tooltip='No Tips' ; %>
+                <% function renderMenu(menus, currentPath) { %>
+                    <ul class="text-dark">
+                        <% menus.forEach(menu=> { %>
+                            <% if (menu.status==='1' ) { %>
+                                <li>
+                                    <% if (menu.link==currentPath) { %>
+                                        <a href="<%= menu.link %>">
+                                            <i class="<%= menu.icon %>"></i> &nbsp;
+                                            <b class="btn btn-md icons">
+                                                <%= menu.name %>
+                                            </b>
+                                        </a>
+                                        <% } else {%>
+                                            <a href="<%= menu.link %>">
+                                                <i class="<%= menu.icon %>"></i> &nbsp;
+                                                <%= menu.name %>
+                                            </a>
+
+                                            <% } %>
+                                                <% if (menu.children && menu.children.length> 0) { %>
+                                                    <%- renderMenu(menu.children, currentPath) %>
+                                                        <% } %>
+                                </li>
+                                <% } %>
+                                    <% }) %>
+                    </ul>
+                    <% } %>
