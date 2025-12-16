@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JWT-based Single Sign-On (SSO) – Technical Documentation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --danger: #ef4444;
+      --success: #22c55e;
+      --border: #1f2933;
+      --mono: 'Fira Code', monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg, #020617, #020617 60%, #020617);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 3rem 2rem 2rem;
+      background: radial-gradient(1200px 400px at 10% -10%, var(--accent-soft), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2.4rem;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 900px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+    }
+
+    nav {
+      position: sticky;
+      top: 2rem;
+      height: fit-content;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+
+    nav h3 {
+      margin: 0 0 0.75rem 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    nav a {
+      display: block;
+      padding: 0.45rem 0.6rem;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    section h2 {
+      margin-top: 0;
+      font-size: 1.6rem;
+      letter-spacing: -0.3px;
+    }
+
+    section h3 {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+
+    section p {
+      color: var(--text);
+      max-width: 900px;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    li {
+      margin: 0.4rem 0;
+    }
+
+    code, pre {
+      font-family: var(--mono);
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #e5e7eb;
+    }
+
+    pre {
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: linear-gradient(90deg, var(--accent-soft), transparent);
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      margin: 1.5rem 0;
+    }
+
+    .warn {
+      border-left-color: var(--danger);
+      background: linear-gradient(90deg, rgba(239,68,68,0.15), transparent);
+    }
+
+    .ok {
+      border-left-color: var(--success);
+      background: linear-gradient(90deg, rgba(34,197,94,0.15), transparent);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+      nav { position: relative; top: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>JWT-based Single Sign-On (SSO)</h1>
+  <p>
+    This document describes the implementation and behavior of the JWT-based Single Sign-On (SSO)
+    mechanism currently used across the Parent Application and multiple Child Applications.
+    The system prioritizes centralized authentication, controlled authorization, and server-side session enforcement.
+  </p>
+</header>
+
+<main>
+  <nav>
+    <h3>Contents</h3>
+    <a href="#overview">Overview</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#tokens">Token Design</a>
+    <a href="#login-flow">Login & Issuance Flow</a>
+    <a href="#session-hydration">Session Hydration</a>
+    <a href="#sso-flow">SSO Flow (Parent → Child)</a>
+    <a href="#authorization">Authorization Model</a>
+    <a href="#refresh">Session Refresh</a>
+    <a href="#revocation">Session Revocation</a>
+    <a href="#security">Security Characteristics</a>
+    <a href="#notes">Operational Notes</a>
+  </nav>
+
+  <div>
+
+    <section id="overview">
+      <h2>1. Overview</h2>
+      <p>
+        The SSO solution is built using JSON Web Tokens (JWT) combined with server-side
+        session validation. The Parent Application acts as the <strong>authentication authority</strong>,
+        while Child Applications rely on the same JWT cookies and session semantics to grant access.
+      </p>
+      <div class="callout ok">
+        This is a <strong>stateful SSO system</strong>. JWTs are used as signed carriers of session identity,
+        not as a fully stateless authentication mechanism.
+      </div>
+    </section>
+
+    <section id="architecture">
+      <h2>2. Architecture</h2>
+      <ul>
+        <li>Parent App handles authentication and token issuance</li>
+        <li>JWTs are stored in HTTP-only cookies and shared across apps under the same domain</li>
+        <li>Child Apps trust the Parent App’s JWT signature and validate session state</li>
+        <li>Database-backed session store enforces single-session and revocation</li>
+      </ul>
+      <pre>
+Browser
+  │
+  ├── token (User JWT)
+  ├── permToken (Permission JWT)
+  │
+  ▼
+Parent App  ──┬── Issues JWTs
+              └── Stores session_id in DB
+  │
+  ▼
+Child Apps ── Validate JWT → Hydrate Session → Enforce DB session
+      </pre>
+    </section>
+
+    <section id="tokens">
+      <h2>3. Token Design</h2>
+
+      <h3>User Token (token)</h3>
+      <p>Represents authenticated identity and session binding.</p>
+      <pre>{
+  id,
+  name,
+  unit,
+  grade,
+  department,
+  session_id,
+  currentPath
+}</pre>
+
+      <h3>Permission Token (permToken)</h3>
+      <p>Contains authorization data (menus), compressed to reduce payload size.</p>
+      <pre>{
+  menus: "base64(zlib(JSON))"
+}</pre>
+
+      <div class="callout">
+        Splitting identity and permissions into two JWTs allows permission updates
+        without reissuing the full identity token.
+      </div>
+    </section>
+
+    <section id="login-flow">
+      <h2>4. Login & Token Issuance Flow</h2>
+      <ol>
+        <li>User authenticates with Parent Application</li>
+        <li>Server creates a unique session entry in <code>JwtSessionStore</code></li>
+        <li>User JWT and Permission JWT are generated</li>
+        <li>JWTs are sent as HTTP-only cookies</li>
+      </ol>
+      <pre>
+Login → DB Session → JWT Sign → Cookies Set
+      </pre>
+    </section>
+
+    <section id="session-hydration">
+      <h2>5. Session Hydration (jwtToSession)</h2>
+      <p>
+        On every request, the <code>jwtToSession</code> middleware:
+      </p>
+      <ul>
+        <li>Reads JWT cookies</li>
+        <li>Verifies signatures</li>
+        <li>Inflates permission menus</li>
+        <li>Builds <code>req.session.user</code></li>
+        <li>Attaches decoded token to <code>req.user</code></li>
+      </ul>
+      <div class="callout ok">
+        Child applications do not need to re-authenticate users.
+        Session context is reconstructed locally from JWTs.
+      </div>
+    </section>
+
+    <section id="sso-flow">
+      <h2>6. SSO Flow: Parent → Child Applications</h2>
+      <p>
+        Because all applications share the same cookie domain and JWT secret,
+        authentication performed once in the Parent App automatically applies to Child Apps.
+      </p>
+      <ol>
+        <li>User logs in to Parent App</li>
+        <li>JWT cookies are stored in browser</li>
+        <li>User navigates to Child App</li>
+        <li>Child App middleware validates JWTs</li>
+        <li>Access is granted if session and permissions are valid</li>
+      </ol>
+    </section>
+
+    <section id="authorization">
+      <h2>7. Authorization Model</h2>
+      <ul>
+        <li>Public routes are whitelisted via environment configuration</li>
+        <li>Protected routes are matched against user menus</li>
+        <li>Dynamic parameters are normalized for comparison</li>
+      </ul>
+      <pre>
+Request Path → Normalize → Menu Match → Access Decision
+      </pre>
+    </section>
+
+    <section id="refresh">
+      <h2>8. Session Refresh & Sliding Expiry</h2>
+      <p>
+        If a JWT is close to expiry, a new token is silently issued.
+        This creates a sliding session window while maintaining short token lifetimes.
+      </p>
+      <div class="callout">
+        Active users remain logged in.
+        Inactive users naturally expire.
+      </div>
+    </section>
+
+    <section id="revocation">
+      <h2>9. Session Revocation & Single Login Enforcement</h2>
+      <p>
+        Every request validates the JWT session_id against the latest session stored in the database.
+      </p>
+      <ul>
+        <li>New login invalidates old sessions</li>
+        <li>Manual DB cleanup immediately revokes access</li>
+        <li>JWT replay is neutralized</li>
+      </ul>
+      <div class="callout ok">
+        This provides strong control without relying on token blacklists.
+      </div>
+    </section>
+
+    <section id="security">
+      <h2>10. Security Characteristics</h2>
+      <ul>
+        <li>HTTP-only cookies prevent XSS token theft</li>
+        <li>JWT signatures prevent tampering</li>
+        <li>DB session enforcement enables revocation</li>
+        <li>Permissions are isolated from identity</li>
+      </ul>
+      <div class="callout warn">
+        This design intentionally sacrifices full statelessness
+        in favor of control, auditability, and enterprise security.
+      </div>
+    </section>
+
+    <section id="notes">
+      <h2>11. Operational Notes</h2>
+      <ul>
+        <li>All apps must share the same JWT secret(s)</li>
+        <li>Cookies must be scoped to a common domain</li>
+        <li>Clock skew between servers should be minimized</li>
+        <li>DB availability is critical to authentication flow</li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  JWT-based SSO Documentation · Internal Use · Version 1.0
+</footer>
+
+</body>
+</html>
